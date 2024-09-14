@@ -13,5 +13,5 @@ WORKDIR /app
 COPY --from=build /app/dist/legajo-front /usr/share/nginx/html
 COPY --from=build /app/dist/legajo-front /app
 RUN npm install -g http-server
-EXPOSE 4005
+EXPOSE 4004
 CMD ["http-server", "/app", "-p", "4000"]
