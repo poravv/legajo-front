@@ -1,0 +1,144 @@
+<app-content-header [title]="'Clientes'" [route]="'/cliente/create'" [buttonTitle]="'Nuevo'" [exportExcel]="true"
+  [dataExport]="listOfDisplayData" [dataExportTitle]="'persona'" [masivo]="true" [type]="'persona'">
+</app-content-header>
+
+<div style="padding: 10px;">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" #searchText nz-input placeholder="Buscador" Green (keyup)="searchTotal(searchText.value)" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  <nz-table #rowsPersona nzBordered [nzData]="listOfDisplayData" nzTableLayout="fixed" nzSize="middle"
+    [nzScroll]="{ x: '2000px', y: '400px' }">
+    <thead>
+      <tr>
+        <!--th nzWidth="30%">COLOR1</th-->
+        <th nzLeft nzWidth="50px"></th>
+        <th nzWidth="50px">Id</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Nacimiento</th>
+        <th>Sexo</th>
+        <th>Documento</th>
+        <th>Direccion</th>
+        <th>Photo</th>
+        <th>Tipo doc.</th>
+        <th>Nacionalidad</th>
+        <th>Correo</th>
+        <th>Telefono</th>
+        <th>Ciudad</th>
+        <th>Asesor</th>
+        <th>Estado</th>
+        <th nzWidth="120px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let data of rowsPersona.data">
+        <tr>
+          <td nzLeft [nzExpand]="expandSet.has(data.idpersona)"
+            (nzExpandChange)="onExpandChange(data.idpersona, $event)"></td>
+          <td>{{ data.idpersona }}</td>
+          <td>{{ data.nombre }}</td>
+          <td>{{ data.apellido }}</td>
+          <td>{{ data.nacimiento }}</td>
+          <td>{{ data.sexo=="MA"?"Masculino":"Femenino" }}</td>
+          <td>{{ data.documento }}</td>
+          <td>{{ data.direccion }}</td>
+          <td> <app-image-decode [image]="data.photo" /> </td>
+          <td>{{ data.tipo_doc }}</td>
+          <td>{{ data.nacionalidad }}</td>
+          <td>{{ data.correo }}</td>
+          <td>{{ data.telefono }}</td>
+          <td>{{ data.ciudad.descripcion }}</td>
+          <td>{{ data.asesor.nombre+' '+data.asesor.apellido }}</td>
+          <td>{{ data.estado=="AC"?"Activo":"Inactivo" }}</td>
+          <td>
+            <a style="padding: 4px;" [routerLink]="['/legajo/create', data.idpersona]" nzTooltipTitle="Legajo"
+              nz-tooltip>Legajo</a>
+            <br />
+            <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
+              (nzOnConfirm)="deleteRow(data.idpersona)">Borrar</a>
+            <br />
+            <a style="padding: 4px;" (click)="openWhatsApp(data.telefono)"
+              nz-tooltip>Whatsapp</a>
+            
+          </td>
+        </tr>
+
+        <tr [nzExpand]="expandSet.has(data.idpersona)">
+          <nz-table #editRowTable nzBordered [nzData]="data.legajos" nzTableLayout="fixed" nzSize="middle"
+            [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <!--th nzWidth="30%">COLOR1</th-->
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th>Detalle</th>
+                <th>Documento</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+    <tbody>
+      <tr *ngFor="let legajo of editRowTable.data" >
+        <ng-container *ngIf="legajo.estado === 'AC'">
+          <ng-container *ngIf="!editCache[legajo.idlegajo].edit; else editTemplate">
+            <td>{{ legajo.idlegajo }}</td>
+            <td>{{ legajo.descripcion }}</td>
+            <td>{{ legajo.detalle }}</td>
+            <td> <app-image-decode [image]="legajo.img" /> </td>
+            <td>{{ legajo.estado=="AC"?"Activo":"Inactivo" }}</td>
+            <td>
+              <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">Edit</a>
+              <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
+                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">Delete</a>
+            </td>
+          </ng-container>
+        </ng-container>
+        
+        <ng-template #editTemplate>
+          <td><input type="text" nz-input disabled [(ngModel)]="editCache[legajo.idlegajo].data.idlegajo" /></td>
+          <td><input type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.descripcion" /></td>
+          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>
+          
+          <td>
+            <nz-upload
+              class="avatar-uploader" 
+              nzName="avatar" 
+              nzListType="picture-card" 
+              [nzShowUploadList]="false" 
+              [nzBeforeUpload]="beforeUpload"
+              [nzCustomRequest]="customUploadReq"
+              (nzChange)="handleChange($event)">
+              <ng-container *ngIf="!avatarUrl">
+                <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
+                <div class="ant-upload-text">Cargar</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+            </nz-upload>
+            <!--input type="text" nz-input [(ngModel)]="editCache[data.idpersona].data.photo" /-->
+          </td>
+          <!--td><input type="text" nz-input [(ngModel)]="editCache[data.idlegajo].data.estado" /></td-->
+
+          <td>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
+              [(ngModel)]="editCache[legajo.idlegajo].data.estado">
+              <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+              <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+            </nz-select>
+          </td>
+
+          <td>
+            <a (click)="saveEdit(legajo.idlegajo)" class="save">Save</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(legajo.idlegajo)">Cancel</a>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </nz-table>
+  </tr>
+  </ng-container>
+  </tbody>
+  </nz-table>
+</div>

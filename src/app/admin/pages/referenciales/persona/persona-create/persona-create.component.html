@@ -1,0 +1,24 @@
+<app-content-header [title]="'Nueva persona'"></app-content-header>
+
+<app-persona-create-template 
+    [personaData]="personaData" 
+    [documentStatus]="documentStatus"
+    (ngModelChange)="actualizarModelo($event)" 
+    (ngModelChangeStatus)="actualizarEstado($event)">
+</app-persona-create-template>
+
+<nz-divider></nz-divider>
+
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item nz-item>
+        <nz-form-control>
+            <button nzType="default" nzDanger nz-button (click)="volver($event)">Volver</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nzType="primary" nzGhost nz-button (click)="resetForm()">Reset</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

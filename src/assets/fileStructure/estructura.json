@@ -1,0 +1,6 @@
+[
+    {
+        "type" : "ciudad",
+        "estructura":[["descripcion","estado"],["idciudad"]]
+    }
+]

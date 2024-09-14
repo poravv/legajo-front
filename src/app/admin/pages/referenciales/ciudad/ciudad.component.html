@@ -1,0 +1,65 @@
+<app-content-header [title]="'Ciudad'" [route]="'/ciudad/create'" [buttonTitle]="'Nuevo'" [exportExcel]="true"
+  [dataExport]="listOfDisplayData" [dataExportTitle]="'ciudad'" [masivo]="true" [type]="'ciudad'">
+</app-content-header>
+
+<div style="padding: 10px;">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" #searchText nz-input placeholder="Buscador" Green
+      (keyup)="searchTotal(searchText.value)" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  
+  <nz-table 
+        #editRowTable 
+        nzBordered 
+        [nzData]="listOfDisplayData" 
+        nzTableLayout="fixed" 
+        nzSize="middle"
+        nzShowPagination
+        nzShowSizeChanger
+        [nzScroll]="{ x: '1000px', y: '400px' }">
+    <thead>
+      <tr>
+        <!--th nzWidth="30%">COLOR1</th-->
+        <th>Id</th>
+        <th>Descripcion</th>
+        <th>Estado</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of editRowTable.data">
+        <ng-container *ngIf="!editCache[data.idciudad].edit; else editTemplate">
+          <td>{{ data.idciudad }}</td>
+          <td>{{ data.descripcion }}</td>
+          <td>{{ data.estado=="AC"?"Activo":"Inactivo" }}</td>
+          <td>
+            <a style="padding: 4px;" (click)="startEdit(data.idciudad)">Edit</a>
+            <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
+              (nzOnConfirm)="deleteRow(data.idciudad)">Delete</a>
+          </td>
+        </ng-container>
+        <ng-template #editTemplate>
+          <td><input type="text" nz-input disabled [(ngModel)]="editCache[data.idciudad].data.idciudad" /></td>
+          <td><input type="text" nz-input [(ngModel)]="editCache[data.idciudad].data.descripcion" /></td>
+          <!--td><input type="text" nz-input [(ngModel)]="editCache[data.idciudad].data.estado" /></td-->
+
+          <td>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
+              [(ngModel)]="editCache[data.idciudad].data.estado">
+              <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+              <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+            </nz-select>
+          </td>
+
+          <td>
+            <a (click)="saveEdit(data.idciudad)" class="save">Save</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.idciudad)">Cancel</a>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

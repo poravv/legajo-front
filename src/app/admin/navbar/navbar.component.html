@@ -1,0 +1,32 @@
+<nz-layout>
+  <nz-header>
+    <div [routerLink]="'home'" style="cursor: pointer;" class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+      <li (click)="logout()" nz-menu-item>logout</li>
+    </ul>
+  </nz-header>
+  <nz-content class="outer-content">
+  </nz-content>
+  <nz-layout class="inner-layout">
+    <nz-sider nzCollapsible nzWidth="200px" nzTheme="light">
+      <ul nz-menu nzMode="inline" class="sider-menu">
+        <li nz-menu-item [routerLink]="'home'">
+          <span nz-icon nzType="home"></span>
+          <span>Home</span>
+        </li>
+        <li nz-submenu nzTitle="Sistema" nzIcon="setting" *ngIf="hasAnyRole(['admin','asesor'])">
+          <ul>
+            <li nz-menu-item [routerLink]="'ciudad/list'" *ngIf="hasAnyRole(['admin'])">Ciudades</li>
+            <li nz-menu-item [routerLink]="'cliente/list'">Clientes</li>
+            <li nz-menu-item [routerLink]="'asesor/list'" *ngIf="hasAnyRole(['admin'])">Asesores</li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

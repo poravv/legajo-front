@@ -1,0 +1,55 @@
+/* carga-masiva.component.css */
+.progress {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    height: 200px;
+    --background-color: #d22f2f;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: #007bff;
+  }
+  
+  .structured{
+    display: flex;
+    width: 100%;
+    height: 60px;
+    --text-align: center;
+    align-items: center;
+    justify-content: center;
+    background-color: #DAE7FE;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .validados{
+    display: flex;
+    width: 100%;
+    --height: 130px;
+    --text-align: center;
+    --align-items: center;
+    --justify-content: center;
+    background-color: #DAE7FE;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  input[type=file]::file-selector-button {
+    cursor: pointer;
+    border: 0;
+    padding: 8px;
+    background-color: rgb(22, 38, 147);
+    border-radius: 2px;
+    color: white;
+  }
+
+  input[type=file]::file-selector-button:hover {
+    background-color: rgb(41, 57, 180);
+  }

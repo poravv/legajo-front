@@ -1,0 +1,129 @@
+<app-content-header [title]="title"></app-content-header>
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="processSubmit()">
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Razon social</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <input formControlName="razon_social" nz-input placeholder="Razon social" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Ruc</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <input formControlName="ruc" nz-input placeholder="Ruc" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Telefono</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <input formControlName="telefono" nz-input placeholder="Telefono" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Direccion</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <input formControlName="direccion" nz-input placeholder="Direccion" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Correo</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <input formControlName="correo" nz-input placeholder="Correo" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Tipo de cliente</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select tipo de cliente" formControlName="tipo_cli">
+                    <nz-option nzLabel="Fisico" nzValue="F"></nz-option>
+                    <nz-option nzLabel="Juridico" nzValue="J"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item *ngIf="validateForm.get('tipo_cli')?.value === 'F'">
+        <nz-form-label nz-label nzRequired>Sexo</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Seleccione sexo" formControlName="sexo">
+                    <nz-option nzLabel="Masculino" nzValue="MA"></nz-option>
+                    <nz-option nzLabel="Femenino" nzValue="FE"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+    
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Ciudad</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <nz-select 
+                    name="ciudad"
+                    nzShowSearch
+                    nzAllowClear
+                    nzPlaceHolder="Seleccione ciudad"
+                    formControlName="idciudad">
+                    <nz-option *ngFor="let ciudad of ciudades" [nzValue]="ciudad.idciudad"
+                        nzLabel={{ciudad.descripcion}}>
+                    </nz-option>
+                </nz-select>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Estado</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group>
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado" formControlName="estado">
+                    <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+                    <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label>Foto</nz-form-label>
+        <nz-form-control>
+            <nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card"
+                [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customUploadReq"
+                (nzChange)="handleChange($event)">
+                <ng-container *ngIf="!avatarUrl">
+                    <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
+                    <div class="ant-upload-text">Cargar</div>
+                </ng-container>
+                <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+            </nz-upload>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-control>
+            <button nzType="default" nzDanger nz-button (click)="volver($event)">Volver</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nzType="primary" nzGhost nz-button (click)="resetForm($event)">Reset</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

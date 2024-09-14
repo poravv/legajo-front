@@ -1,0 +1,9 @@
+.content_header {
+    display: flex; /* Activar Flexbox */
+    justify-content: space-between; /* Distribuir elementos en los extremos */
+    align-items: center; /* Alinear verticalmente */
+  }
+  
+  .h2 {
+    margin: 0; /* Eliminar margen predeterminado */
+  }

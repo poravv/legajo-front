@@ -1,0 +1,28 @@
+<!-- carga-masiva.component.html -->
+<div *ngIf="estructura" class="structured">
+    La estructura del archivo debe ser<b> [{{estructura}}]</b>
+</div>
+
+
+<div>
+    <input style="width: 80%;" class="input-style" type="file" (change)="handleFileInput($event)">
+    <button  nz-button nzType="default" (click)="volver()">Volver</button>
+</div>
+
+<div *ngIf="aceptados||omitidos" class="validados">
+    <div style="margin: 10px;">
+        * Registros aceptados: {{aceptados}}
+        <br />
+        * Registros omitidos: {{omitidos}}
+        <br />
+        <div style="margin-top: 10px;">
+            <button nz-button nzType="primary" (click)="procesarRegistros()">Procesar</button>
+        </div>
+    </div>
+</div>
+
+<!-- carga-masiva.component.html -->
+<div class="progress" *ngIf="totalRegistros">
+    <!--div class="progress-bar" [ngStyle]="{ 'width.%': progreso }"></div-->
+    <nz-progress [nzPercent]="progreso" [nzWidth]="200" nzType="circle"></nz-progress>
+</div>

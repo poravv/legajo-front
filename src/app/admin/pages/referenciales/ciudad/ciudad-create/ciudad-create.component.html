@@ -1,0 +1,36 @@
+<app-content-header [title]="'Nuevo Ciudad'"></app-content-header>
+
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Descripción</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group >
+                <input formControlName="descripcion" nz-input placeholder="Descripción" />
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-item>
+        <nz-form-label nz-label nzRequired>Estado</nz-form-label>
+        <nz-form-control nzErrorTip="Inserte un valor correcto!">
+            <nz-input-group >
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado" formControlName="estado" >
+                    <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+                    <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+                  </nz-select>
+            </nz-input-group>
+        </nz-form-control>
+    </nz-form-item>
+    
+    <nz-form-item nz-item>
+        <nz-form-control>
+            <button nzType="default" nzDanger nz-button (click)="volver($event)">Volver</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+        </nz-form-control>
+        <nz-form-control>
+            <button nzType="primary" nzGhost nz-button (click)="resetForm($event)">Reset</button>
+        </nz-form-control>
+    </nz-form-item>
+</form>

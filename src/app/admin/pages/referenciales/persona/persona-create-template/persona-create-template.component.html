@@ -1,0 +1,197 @@
+<nz-tabset nzType="card" [(nzSelectedIndex)]="selectedIndex">
+    <nz-tab nzTitle="Buscar">
+        <div style="display: flex; width: 80%;">
+            <nz-form-item class="item" nz-item>
+                <nz-form-label class="label" nz-label>Documento</nz-form-label>
+                <nz-form-control>
+                    <nz-input-group style="display: flex;">
+                        <input [(ngModel)]="documento" (keyup.enter)="searchDocument()" nz-input placeholder="Ingrese el documento" />
+                        <button nz-button nzType="primary" (click)="searchDocument()">Buscar</button>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </nz-tab>
+    <nz-tab nzTitle="Formulario">
+        <form nz-form [nzLayout]="'inline'">
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Documento</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input [disabled]="documentStatus" name="documento" [(ngModel)]="personaData.documento" (ngModelChange)="onInputChange()"
+                            nz-input placeholder="Documento" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Nombre</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input name="nombre" [(ngModel)]="personaData.nombre" (ngModelChange)="onInputChange()" nz-input
+                            placeholder="Nombre" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Apellido</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input name="apellido" [(ngModel)]="personaData.apellido" (ngModelChange)="onInputChange()"
+                            nz-input placeholder="Apellido" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Fecha de nacimiento</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group nzCompact>
+                        <nz-date-picker name="nacimiento" [(ngModel)]="personaData.nacimiento"
+                            (ngModelChange)="onInputChange()" style="width: 100%;"
+                            nzPlaceHolder="Fecha de nacimiento"></nz-date-picker>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Sexo</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="sexo" nzShowSearch nzAllowClear nzPlaceHolder="Select sexo"
+                            [(ngModel)]="personaData.sexo" (ngModelChange)="onInputChange()">
+                            <nz-option nzLabel="Femenino" nzValue="MA"></nz-option>
+                            <nz-option nzLabel="Masculino" nzValue="FE"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Dirección</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input name="direccion" [(ngModel)]="personaData.direccion" (ngModelChange)="onInputChange()"
+                            nz-input placeholder="Dirección" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label>Perfil</nz-form-label>
+                <nz-form-control>
+                    <nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card"
+                        [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customUploadReq"
+                        (nzChange)="handleChange($event)">
+                        <ng-container *ngIf="!avatarUrl">
+                            <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
+                            <div class="ant-upload-text">Cargar</div>
+                        </ng-container>
+                        <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                    </nz-upload>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Tipo de documento</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="tipo_doc" nzShowSearch nzAllowClear nzPlaceHolder="Select tipo de documento"
+                            [(ngModel)]="personaData.tipo_doc" (ngModelChange)="onInputChange()">
+                            <nz-option nzLabel="Cedula de Identidad Paraguaya" nzValue="CI"></nz-option>
+                            <nz-option nzLabel="Documento Extranjero" nzValue="DE"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Nacionalidad</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="nacionalidad" nzShowSearch nzPlaceHolder="Seleccione nacionalidad"
+                            [(ngModel)]="personaData.nacionalidad" (ngModelChange)="onInputChange()">
+                            <nz-option *ngFor="let nacionalidad of nacionalidades" [nzValue]="nacionalidad.value"
+                                nzLabel={{nacionalidad.label}}>
+                            </nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Estado civil</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="est_civil" nzShowSearch nzAllowClear nzPlaceHolder="Select estado civil"
+                            [(ngModel)]="personaData.est_civil" (ngModelChange)="onInputChange()">
+                            <nz-option nzLabel="Soltero" nzValue="SO"></nz-option>
+                            <nz-option nzLabel="Casado" nzValue="CA"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item nz-item>
+                <nz-form-label nz-label>Correo</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input name="correo" [(ngModel)]="personaData.correo" (ngModelChange)="onInputChange()" nz-input
+                            placeholder="Correo" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Teléfono</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <input name="telefono" [(ngModel)]="personaData.telefono" (ngModelChange)="onInputChange()"
+                            nz-input placeholder="Teléfono" />
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Ciudad</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="idciudad" nzShowSearch  nzAllowClear
+                            nzPlaceHolder="Seleccione ciudad" [(ngModel)]="personaData.idciudad"
+                            (ngModelChange)="onInputChange()">
+                            <nz-option *ngFor="let ciudad of allCiudad" [nzValue]="ciudad.idciudad"
+                                nzLabel={{ciudad.descripcion}}>
+                            </nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Asesor</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                  <nz-input-group>
+                    <nz-select 
+                      name="asesor" 
+                      nzShowSearch 
+                      nzPlaceHolder="Seleccione asesor" 
+                      [(ngModel)]="personaData.cod_asesor"
+                      nzAllowClear
+                      (ngModelChange)="onInputChange()">
+                      <nz-option 
+                        *ngFor="let asesor of allAsesores" 
+                        [nzValue]="asesor.cod_asesor"
+                        [nzLabel]="asesor.nombre + ' ' + asesor.apellido">
+                      </nz-option>
+                    </nz-select>
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+              
+
+            <nz-form-item nz-item>
+                <nz-form-label nz-label nzRequired>Estado</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group>
+                        <nz-select name="estado" nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
+                            [(ngModel)]="personaData.estado" (ngModelChange)="onInputChange()">
+                            <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+                            <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+                        </nz-select>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-tab>
+</nz-tabset>

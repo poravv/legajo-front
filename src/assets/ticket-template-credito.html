@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <base href="/">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Factura</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/invoice.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <style>
+        .clearfix:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+        a {
+            color: #5D6975;
+            text-decoration: underline;
+        }
+
+        body {
+            position: relative;
+            width: 21cm;
+            height: 29cm;
+            margin: 0 auto;
+            color: #001028;
+            background: #FFFFFF;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-family: Arial;
+        }
+
+        header {
+            padding: 10px 0;
+            margin-bottom: 30px;
+        }
+
+        #logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        #logo img {
+            width: 90px;
+        }
+
+        h1 {
+            border-top: 1px solid #5D6975;
+            border-bottom: 1px solid #5D6975;
+            color: #5D6975;
+            font-size: 2.4em;
+            line-height: 1.4em;
+            font-weight: normal;
+            text-align: center;
+            margin: 0 0 20px 0;
+            background: url(dimension.png);
+        }
+
+        #project {
+            float: left;
+        }
+
+        #project span {
+            color: #5D6975;
+            text-align: right;
+            width: 52px;
+            margin-right: 10px;
+            display: inline-block;
+            font-size: 0.8em;
+        }
+
+        #company {
+            float: right;
+            text-align: right;
+        }
+
+        #project div,
+        #company div {
+            white-space: nowrap;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 15px;
+        }
+
+        .table-style {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #686868;
+            /* Asegura que los bordes redondeados se apliquen correctamente */
+            border-color: #686868;
+            /* Color del borde */
+            color: #5D6975;
+        }
+
+        table tr:nth-child(2n-1) td {
+            background: #F5F5F5;
+        }
+
+        table th,
+        table td {
+            text-align: center;
+        }
+
+        table th {
+            padding: 5px 20px;
+            color: #5D6975;
+            border: 1px solid #686868;
+            white-space: nowrap;
+            font-weight: normal;
+        }
+
+        table .service,
+        table .desc {
+            text-align: left;
+        }
+
+        table td {
+            padding: 10px;
+            text-align: right;
+        }
+
+        table td.service,
+        table td.desc {
+            vertical-align: top;
+        }
+
+        table td.unit,
+        table td.qty,
+        table td.total {
+            border: 1px solid #686868;
+            font-size: 1em;
+        }
+
+        table td.qty {
+            border: 1px solid #686868;
+            width: 10%;
+        }
+
+        table td.desc {
+            border: 1px solid #686868;
+            width: 60%;
+        }
+
+        table td.unit {
+            border: 1px solid #686868;
+            width: 10%;
+        }
+
+        table td.total {
+            width: 15%;
+            border: 1px solid #5D6975;
+        }
+
+        table td.colspam2 {
+            text-align: start;
+            border: 1px solid #5D6975;
+        }
+
+        table td.gral {
+            border: 1px solid #5D6975;
+            background-color: #ffffff;
+            color: #757575;
+            font-size: 20px;
+        }
+
+
+        #notices .notice {
+            color: #5D6975;
+            font-size: 1.2em;
+        }
+
+        footer {
+            color: #5D6975;
+            width: 100%;
+            height: 20px;
+            position: absolute;
+            bottom: 0;
+            border-top: 1px solid #C1CED9;
+            padding: 2px 0;
+        }
+
+        .my-footer {
+            font-size: 9px;
+            align-items: center;
+        }
+
+        .my-footer table td {
+            text-align: center;
+            padding: 1px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="clearfix">
+        <div class="clearfix">
+            <div id="project" class="clearfix">
+                <div id="logo">
+                    <img
+                        src="assets/logo.png">
+                </div>
+            </div>
+            <div id="company">
+                <h1>Pedido de Venta {{numeroPedido}}</h1>
+            </div>
+        </div>
+
+        <div id="company" class="clearfix">
+            <div>{{negocio}}</div>
+            <div>{{duenho}}<br /> {{direccion}}</div>
+            <div>{{telefono}}</div>
+            <div>{{email}}</div>
+        </div>
+        <div id="project">
+            <div><span>CLIENTE</span> {{cliente}}</div>
+            <div><span>DIRECCION</span> {{direccion_cli}}</div>
+            <div><span>EMAIL</span> {{correo_cli}}</div>
+            <div><span>FECHA</span>{{fecha}}</div>
+            <div><span>HORA</span> {{hora}}</div>
+        </div>
+    </header>
+    <main>
+        <h3>Pedido</h3>
+        <table class="table-style">
+            <thead>
+                <tr>
+                    <th class="service">Cantidad</th>
+                    <th class="desc">Descripcion</th>
+                    <th>Unitario</th>
+                    <th>Descuento</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{detVentaHtml}}
+                <tr>
+                    <td class="colspam2" colspan="3" ><b>Total: </b> {{numLetra}} </td>
+                    <td class="grand total">Total</td>
+                    <td class="grand total">{{total}}</td>
+                </tr>
+                <tr>
+                    <td class="colspam2" colspan="3">Situación del pedido: Pendiente </td>
+                    <td class="grand total">Delivery</td>
+                    <td class="grand total">{{delivery}}</td>
+                </tr>
+                <tr>
+                    <td class="colspam2" colspan="3">Total iva {{totalIva}}</td>
+                    <td class="grand total gral" colspan="2">Gs {{totalGeneral}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <h3>Cuotas</h3>
+        <table class="table-style">
+            <thead>
+                <tr>
+                    <th class="service">Cuota N°</th>
+                    <th class="desc">Total</th>
+                    <th>Pagado</th>
+                    <th>Pendiente</th>
+                    <th>Vencimiento</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{cuotasHtml}}
+            </tbody>
+        </table>
+
+    </main>
+
+    <footer>
+        <table class="my-footer">
+            <tr>
+                <td>RECIBI CONFORME</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>________________________</td>
+                        </tr>
+                        <tr>
+                            <td>Firma</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>________________________</td>
+                        </tr>
+                        <tr>
+                            <td>Aclaración</td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>________________________</td>
+                        </tr>
+                        <tr>
+                            <td>Fecha</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </footer>
+</body>
+
+</html>
