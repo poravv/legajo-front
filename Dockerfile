@@ -2,7 +2,6 @@
 FROM node:20-alpine as build
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm install -g @angular/cli  # Instalar Angular CLI globalmente
 RUN npm install --legacy-peer-dependencies
 COPY . .
 RUN ng build
@@ -11,4 +10,4 @@ RUN ng build
 FROM nginx:alpine
 COPY --from=build /app/dist/legajo-front /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 4004
+EXPOSE 4000
