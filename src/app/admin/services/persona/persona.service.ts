@@ -22,6 +22,16 @@ export class PersonaService {
     });
   }
 
+  getPersonaAgendamiento():Observable<any> {
+    //console.log(this.oauthService.getAccessToken());
+    return this.httpClient.get(`${baseURL}/getagendamiento`, {
+      headers: {
+        'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
+      }
+    });
+  }
+  
+
   getPersonaForAsesorCode():Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/getForAsesor/`, {

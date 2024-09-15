@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/admin/utils/message.service';
 import { CiudadModel } from '../ciudad/ciudad.component';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
@@ -10,6 +10,7 @@ import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { LegajoService } from 'src/app/admin/services/legajo/legajo.service';
 import { AsesorModel } from '../asesor/asesor.component';
 import { AuthService } from 'src/app/admin/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 export interface ImagenBuffer {
   type: string,
@@ -21,7 +22,9 @@ export interface LegajoModel {
   descripcion: string;
   detalle: string;
   estado: string;
-  img: ImagenBuffer
+  fecha_insert: Date;
+  fecha_upd: Date;
+  img?: ImagenBuffer
   idpersona: number;
 }
 
@@ -29,7 +32,7 @@ export interface PersonaModel {
   idpersona: number;
   nombre: string;
   apellido: string;
-  nacimiento: Date;
+  nacimiento: string;
   est_civil: string;
   sexo: string;
   documento: string;
@@ -42,6 +45,9 @@ export interface PersonaModel {
   idciudad: string;
   cod_asesor: number;
   ciudad: CiudadModel,
+  fecha_insert: Date,
+  fecha_upd: Date,
+  fecha_agendamiento: Date,
   legajos: LegajoModel[],
   estado: string;
   asesor: AsesorModel
@@ -57,7 +63,7 @@ export class PersonaComponent implements OnInit {
   loading = false;
   avatarUrl?: string;
   file?: string;
-  image?: any;
+  image: any = '';
   editCache: { [key: string]: { edit: boolean; data: LegajoModel } } = {};
   listOfData: PersonaModel[] = [];
   searchValue = '';
@@ -86,7 +92,8 @@ export class PersonaComponent implements OnInit {
     private messageService: MessageService,
     private msg: NzMessageService,
     private ciudadService: CiudadService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
 
    }
@@ -122,15 +129,15 @@ export class PersonaComponent implements OnInit {
 
   beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
     new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'application/pdf';
       if (!isJpgOrPng) {
-        this.msg.error('You can only upload JPG file!');
+        this.msg.error('Tu archivo no es compatible');
         observer.complete();
         return;
       }
-      const isLt2M = file.size! / 3000 / 3000 < 2;
+      const isLt2M = file.size! / 3072 / 3072 < 2;
       if (!isLt2M) {
-        this.msg.error('Image must smaller than 3MB!');
+        this.msg.error('Tu archivo supera los 3MB');
         observer.complete();
         return;
       }
@@ -179,6 +186,13 @@ export class PersonaComponent implements OnInit {
     }
   }
 
+   // Manejar la eliminación del archivo
+   handleRemove = (): boolean => {
+    this.image = '--'; // Limpiar la lista de archivos al eliminar
+    this.avatarUrl = '--';
+    return true;
+  };
+
   startEdit(idlegajo: string): void {
     this.editCache[idlegajo].edit = true;
   }
@@ -220,7 +234,15 @@ export class PersonaComponent implements OnInit {
         const legajo = persona.legajos[legajoIndex];
         Object.assign(legajo, this.editCache[idlegajo].data);
 
-        legajo.img=this.image;
+        console.log(legajo);
+
+        if (this.image === '') {
+          delete legajo.img; // Esto no causa un error de TypeScript
+          console.log('Legajo sin imagen', legajo);
+        }else {
+          legajo.img = this.image;
+          console.log('Legajo con imagen', legajo);
+        }
 
         // Actualizar el legajo
         this.legajoService.updateLegajo(legajo).subscribe((response) => {
@@ -230,14 +252,16 @@ export class PersonaComponent implements OnInit {
             this.messageService.createMessage('success', response.detmensaje);
           }
         });
-  
+        this.refreshPage();
         this.editCache[idlegajo].edit = false;
         break; // Salir del bucle una vez encontrado y actualizado el legajo
       }
     }
   }
-  
 
+  refreshPage(): void {
+    window.location.reload();
+  }
 
   updateEditCache(): void {
     this.listOfData.forEach(item => {
@@ -291,7 +315,6 @@ export class PersonaComponent implements OnInit {
     this.loading = true;
     //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
       this.personaService.getPersonaForAsesorCode().subscribe(response =>{
-
         if (response) {
           this.listOfData = [...this.listOfData, ...response.body];
           this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;

@@ -5,7 +5,8 @@
                 <nz-form-label class="label" nz-label>Documento</nz-form-label>
                 <nz-form-control>
                     <nz-input-group style="display: flex;">
-                        <input [(ngModel)]="documento" (keyup.enter)="searchDocument()" nz-input placeholder="Ingrese el documento" />
+                        <input [(ngModel)]="documento" (keyup.enter)="searchDocument()" nz-input
+                            placeholder="Ingrese el documento" />
                         <button nz-button nzType="primary" (click)="searchDocument()">Buscar</button>
                     </nz-input-group>
                 </nz-form-control>
@@ -18,8 +19,8 @@
                 <nz-form-label nz-label nzRequired>Documento</nz-form-label>
                 <nz-form-control nzErrorTip="Inserte un valor correcto!">
                     <nz-input-group>
-                        <input [disabled]="documentStatus" name="documento" [(ngModel)]="personaData.documento" (ngModelChange)="onInputChange()"
-                            nz-input placeholder="Documento" />
+                        <input [disabled]="documentStatus" name="documento" [(ngModel)]="personaData.documento"
+                            (ngModelChange)="onInputChange()" nz-input placeholder="Documento" />
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
@@ -45,9 +46,12 @@
                 <nz-form-label nz-label nzRequired>Fecha de nacimiento</nz-form-label>
                 <nz-form-control nzErrorTip="Inserte un valor correcto!">
                     <nz-input-group nzCompact>
-                        <nz-date-picker name="nacimiento" [(ngModel)]="personaData.nacimiento"
+                        <input name="nacimiento" [(ngModel)]="personaData.nacimiento" (ngModelChange)="onInputChange()"
+                            nz-input placeholder="Fecha de nacimiento" />
+
+                        <!--nz-date-picker name="nacimiento" [(ngModel)]="personaData.nacimiento"
                             (ngModelChange)="onInputChange()" style="width: 100%;"
-                            nzPlaceHolder="Fecha de nacimiento"></nz-date-picker>
+                            nzPlaceHolder="Fecha de nacimiento"></nz-date-picker-->
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
@@ -57,8 +61,8 @@
                     <nz-input-group>
                         <nz-select name="sexo" nzShowSearch nzAllowClear nzPlaceHolder="Select sexo"
                             [(ngModel)]="personaData.sexo" (ngModelChange)="onInputChange()">
-                            <nz-option nzLabel="Femenino" nzValue="MA"></nz-option>
-                            <nz-option nzLabel="Masculino" nzValue="FE"></nz-option>
+                            <nz-option nzLabel="Masculino" nzValue="MA"></nz-option>
+                            <nz-option nzLabel="Femenino" nzValue="FE"></nz-option>
                         </nz-select>
                     </nz-input-group>
                 </nz-form-control>
@@ -72,20 +76,28 @@
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
+
             <nz-form-item nz-item>
                 <nz-form-label nz-label>Perfil</nz-form-label>
-                <nz-form-control>
-                    <nz-upload class="avatar-uploader" nzName="avatar" nzListType="picture-card"
-                        [nzShowUploadList]="false" [nzBeforeUpload]="beforeUpload" [nzCustomRequest]="customUploadReq"
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        [nzBeforeUpload]="beforeUpload" 
+                        [nzShowUploadList]="{ showDownloadIcon: false, showRemoveIcon: true }" 
+                        [nzLimit]="1"
+                        [nzCustomRequest]="customUploadReq"
+                        [nzAccept]="'.png,.jpg,.jpeg,.pdf'" 
+                        [nzMultiple]="false" 
+                        [nzRemove]="handleRemove" 
                         (nzChange)="handleChange($event)">
-                        <ng-container *ngIf="!avatarUrl">
-                            <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
-                            <div class="ant-upload-text">Cargar</div>
-                        </ng-container>
-                        <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+                        <button nz-button [disabled]="image!==''">
+                            <span nz-icon nzType="upload"></span>
+                            Upload
+                        </button>
                     </nz-upload>
                 </nz-form-control>
             </nz-form-item>
+
+
             <nz-form-item nz-item>
                 <nz-form-label nz-label nzRequired>Tipo de documento</nz-form-label>
                 <nz-form-control nzErrorTip="Inserte un valor correcto!">
@@ -147,9 +159,8 @@
                 <nz-form-label nz-label nzRequired>Ciudad</nz-form-label>
                 <nz-form-control nzErrorTip="Inserte un valor correcto!">
                     <nz-input-group>
-                        <nz-select name="idciudad" nzShowSearch  nzAllowClear
-                            nzPlaceHolder="Seleccione ciudad" [(ngModel)]="personaData.idciudad"
-                            (ngModelChange)="onInputChange()">
+                        <nz-select name="idciudad" nzShowSearch nzAllowClear nzPlaceHolder="Seleccione ciudad"
+                            [(ngModel)]="personaData.idciudad" (ngModelChange)="onInputChange()">
                             <nz-option *ngFor="let ciudad of allCiudad" [nzValue]="ciudad.idciudad"
                                 nzLabel={{ciudad.descripcion}}>
                             </nz-option>
@@ -158,27 +169,19 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item nz-item>
-                <nz-form-label nz-label nzRequired>Asesor</nz-form-label>
-                <nz-form-control nzErrorTip="Inserte un valor correcto!">
-                  <nz-input-group>
-                    <nz-select 
-                      name="asesor" 
-                      nzShowSearch 
-                      nzPlaceHolder="Seleccione asesor" 
-                      [(ngModel)]="personaData.cod_asesor"
-                      nzAllowClear
-                      (ngModelChange)="onInputChange()">
-                      <nz-option 
-                        *ngFor="let asesor of allAsesores" 
-                        [nzValue]="asesor.cod_asesor"
-                        [nzLabel]="asesor.nombre + ' ' + asesor.apellido">
-                      </nz-option>
-                    </nz-select>
-                  </nz-input-group>
+            <nz-form-item nz-item *ngIf="isAdmin()">
+                <nz-form-label nz-label>Asesor</nz-form-label>
+                <nz-form-control >
+                    <nz-input-group>
+                        <nz-select name="asesor" nzShowSearch nzPlaceHolder="Seleccione asesor"
+                            [(ngModel)]="personaData.cod_asesor" nzAllowClear (ngModelChange)="onInputChange()">
+                            <nz-option *ngFor="let asesor of allAsesores" [nzValue]="asesor.cod_asesor"
+                                [nzLabel]="asesor.nombre + ' ' + asesor.apellido">
+                            </nz-option>
+                        </nz-select>
+                    </nz-input-group>
                 </nz-form-control>
-              </nz-form-item>
-              
+            </nz-form-item>
 
             <nz-form-item nz-item>
                 <nz-form-label nz-label nzRequired>Estado</nz-form-label>
@@ -188,10 +191,23 @@
                             [(ngModel)]="personaData.estado" (ngModelChange)="onInputChange()">
                             <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
                             <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+                            <nz-option nzLabel="Agendamiento" nzValue="AG"></nz-option>
                         </nz-select>
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
+
+            <nz-form-item nz-item *ngIf="personaData.estado === 'AG'">
+                <nz-form-label nz-label nzRequired>Fecha de agendamiento</nz-form-label>
+                <nz-form-control nzErrorTip="Inserte un valor correcto!">
+                    <nz-input-group nzCompact>
+                        <nz-date-picker name="fecha_agendamiento" [(ngModel)]="personaData.fecha_agendamiento"
+                            (ngModelChange)="onInputChange()" style="width: 100%;"
+                            nzPlaceHolder="Fecha de agendamiento"></nz-date-picker>
+                    </nz-input-group>
+                </nz-form-control>
+            </nz-form-item>
+
         </form>
     </nz-tab>
 </nz-tabset>

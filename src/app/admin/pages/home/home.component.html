@@ -1,1 +1,20 @@
-<p></p>
+<div *ngIf="personas.length > 0; else noPersonas">
+    <h2>Gestionar clientes</h2>
+    <div style="width: 100%;display: flex;">
+        <div *ngFor="let persona of personas" class="nft">
+            <div class="main">
+                <img class="tokenImage" src="assets/profile.png" alt="Imagen de perfil" />
+                <h2>{{ persona.nombre }} {{ persona.apellido }}</h2>
+                <hr />
+                <p class="description"><b>Documento:</b> {{ persona.documento }}</p>
+                <p class="description"><b>Fecha:</b> {{ persona.fecha_agendamiento }}</p>
+                <p class="description"><b>Asesor:</b> {{ persona.asesor.nombre+' '+persona.asesor.apellido }}</p>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #noPersonas>
+    <p>No hay personas registradas.</p>
+</ng-template>

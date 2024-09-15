@@ -1,1 +1,12 @@
-<img nz-image width="100px" height="100px" [nzSrc]="imageUrl" [nzFallback]="fallback" alt="" >
+<!-- Si es una imagen -->
+<ng-container *ngIf="isImage">
+  <!--img [src]="imageUrl" alt="Uploaded Image" width="200" height="200"-->
+  <a [href]="imageUrl" download="image.jpg">Descargar Imagen</a>
+</ng-container>
+
+
+<!-- Si es un PDF -->
+<ng-container *ngIf="isPdf">
+    <a [href]="imageUrl" download="document.pdf">Descargar PDF</a>
+  </ng-container>
+  

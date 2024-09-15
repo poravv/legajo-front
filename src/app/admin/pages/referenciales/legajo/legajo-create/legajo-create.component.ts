@@ -43,7 +43,7 @@ export class LegajoCreateComponent {
 
     this.validateForm = this.fb.group({
       descripcion: ['', [Validators.required]],
-      detalle: ['', [Validators.required]],
+      detalle: [''],
       idpersona: [''],
       img: [''],
       estado: ['',[Validators.required]],
@@ -102,15 +102,15 @@ export class LegajoCreateComponent {
 
   beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
     new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'application/pdf';
       if (!isJpgOrPng) {
-        this.msg.error('You can only upload JPG file!');
+        this.msg.error('Tu archivo no es compatible!');
         observer.complete();
         return;
       }
-      const isLt2M = file.size! / 1024 / 1024 < 2;
+      const isLt2M = file.size! / 3072 / 3072 < 2;
       if (!isLt2M) {
-        this.msg.error('Image must smaller than 2MB!');
+        this.msg.error('Tu archivo supera los 3MB!');
         observer.complete();
         return;
       }

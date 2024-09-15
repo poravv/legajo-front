@@ -10,7 +10,7 @@
     <i nz-icon nzType="search"></i>
   </ng-template>
   <nz-table #rowsPersona nzBordered [nzData]="listOfDisplayData" nzTableLayout="fixed" nzSize="middle"
-    [nzScroll]="{ x: '2000px', y: '400px' }">
+    [nzScroll]="{ x: '2200px', y: '400px' }">
     <thead>
       <tr>
         <!--th nzWidth="30%">COLOR1</th-->
@@ -22,20 +22,23 @@
         <th>Sexo</th>
         <th>Documento</th>
         <th>Direccion</th>
-        <th>Photo</th>
+        <th>Perfil</th>
         <th>Tipo doc.</th>
         <th>Nacionalidad</th>
         <th>Correo</th>
         <th>Telefono</th>
         <th>Ciudad</th>
         <th>Asesor</th>
+        <th>Fecha Alta</th>
+        <th>Fecha Actualizacion</th>
+        <th>Fecha Agendamiento</th>
         <th>Estado</th>
         <th nzWidth="120px"></th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let data of rowsPersona.data">
-        <tr>
+        <tr *ngIf="data.estado != 'IN'">
           <td nzLeft [nzExpand]="expandSet.has(data.idpersona)"
             (nzExpandChange)="onExpandChange(data.idpersona, $event)"></td>
           <td>{{ data.idpersona }}</td>
@@ -52,7 +55,10 @@
           <td>{{ data.telefono }}</td>
           <td>{{ data.ciudad.descripcion }}</td>
           <td>{{ data.asesor.nombre+' '+data.asesor.apellido }}</td>
-          <td>{{ data.estado=="AC"?"Activo":"Inactivo" }}</td>
+          <td>{{ data.fecha_insert }}</td>
+          <td>{{ data.fecha_upd }}</td>
+          <td>{{ data.fecha_agendamiento }}</td>
+          <td>{{ data.estado=="AC"?"Activo":data.estado=="AG"?"Agendamiento":"Inactivo"}}</td>
           <td>
             <a style="padding: 4px;" [routerLink]="['/legajo/create', data.idpersona]" nzTooltipTitle="Legajo"
               nz-tooltip>Legajo</a>
@@ -60,9 +66,7 @@
             <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
               (nzOnConfirm)="deleteRow(data.idpersona)">Borrar</a>
             <br />
-            <a style="padding: 4px;" (click)="openWhatsApp(data.telefono)"
-              nz-tooltip>Whatsapp</a>
-            
+            <a style="padding: 4px;" (click)="openWhatsApp(data.telefono)" nz-tooltip>Whatsapp</a>
           </td>
         </tr>
 
@@ -76,18 +80,22 @@
                 <th>Descripcion</th>
                 <th>Detalle</th>
                 <th>Documento</th>
+                <th>Fecha Alta</th>
+                <th>Fecha Actualizacion</th>
                 <th>Estado</th>
                 <th></th>
               </tr>
             </thead>
     <tbody>
-      <tr *ngFor="let legajo of editRowTable.data" >
+      <tr *ngFor="let legajo of editRowTable.data">
         <ng-container *ngIf="legajo.estado === 'AC'">
           <ng-container *ngIf="!editCache[legajo.idlegajo].edit; else editTemplate">
             <td>{{ legajo.idlegajo }}</td>
             <td>{{ legajo.descripcion }}</td>
             <td>{{ legajo.detalle }}</td>
             <td> <app-image-decode [image]="legajo.img" /> </td>
+            <td>{{ legajo.fecha_insert }}</td>
+            <td>{{ legajo.fecha_upd }}</td>
             <td>{{ legajo.estado=="AC"?"Activo":"Inactivo" }}</td>
             <td>
               <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">Edit</a>
@@ -96,31 +104,26 @@
             </td>
           </ng-container>
         </ng-container>
-        
+
         <ng-template #editTemplate>
           <td><input type="text" nz-input disabled [(ngModel)]="editCache[legajo.idlegajo].data.idlegajo" /></td>
           <td><input type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.descripcion" /></td>
-          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>
-          
+          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>          
           <td>
-            <nz-upload
-              class="avatar-uploader" 
-              nzName="avatar" 
-              nzListType="picture-card" 
-              [nzShowUploadList]="false" 
-              [nzBeforeUpload]="beforeUpload"
-              [nzCustomRequest]="customUploadReq"
-              (nzChange)="handleChange($event)">
-              <ng-container *ngIf="!avatarUrl">
-                <span class="upload-icon" nz-icon [nzType]="loading ? 'loading' : 'plus'"></span>
-                <div class="ant-upload-text">Cargar</div>
-              </ng-container>
-              <img *ngIf="avatarUrl" [src]="avatarUrl" style="width: 100%" />
+            <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" [nzBeforeUpload]="beforeUpload"
+              [nzShowUploadList]="{ showDownloadIcon: false, showRemoveIcon: true }" [nzLimit]="1"
+              [nzCustomRequest]="customUploadReq" [nzAccept]="'.png,.jpg,.jpeg,.pdf'" [nzMultiple]="false"
+              [nzRemove]="handleRemove" (nzChange)="handleChange($event)">
+              <button nz-button [disabled]="image!==''">
+                <span nz-icon nzType="upload"></span>
+                Upload
+              </button>
             </nz-upload>
             <!--input type="text" nz-input [(ngModel)]="editCache[data.idpersona].data.photo" /-->
           </td>
           <!--td><input type="text" nz-input [(ngModel)]="editCache[data.idlegajo].data.estado" /></td-->
-
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" /></td>
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" /></td>
           <td>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
               [(ngModel)]="editCache[legajo.idlegajo].data.estado">

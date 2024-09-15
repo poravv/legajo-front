@@ -40,7 +40,7 @@ const routes: Routes = [
       { path: 'create', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
       { path: 'edit/:idcliente', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
     ]
-  },
+  }, 
   {
     path: 'legajo',
     children: [

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
   NonNullableFormBuilder,
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable, Observer } from 'rxjs';
+import { AuthService } from 'src/app/admin/services/auth/auth.service';
 import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { MessageService } from 'src/app/admin/utils/message.service';
 
@@ -17,7 +18,8 @@ import { MessageService } from 'src/app/admin/utils/message.service';
   templateUrl: './persona-create.component.html',
   styleUrls: ['./persona-create.component.css'],
 })
-export class PersonaCreateComponent {
+export class PersonaCreateComponent{
+  
   personaData: any = {};
   documentStatus: boolean = false;
   loading = false;
@@ -29,8 +31,7 @@ export class PersonaCreateComponent {
     private fb: NonNullableFormBuilder,
     private personaService: PersonaService,
     private messageService: MessageService,
-    private router: Router,
-    private msg: NzMessageService
+    private router: Router
   ) {
     this.validateForm = this.fb.group({
       nombre: ['', [Validators.required],],
@@ -41,7 +42,7 @@ export class PersonaCreateComponent {
       documento: ['', [Validators.required],],
       estado: ['', [Validators.required],],
       direccion: ['', [Validators.required],],
-      cod_asesor: ['', [Validators.required],],
+      cod_asesor: [''],
       photo: [''],
       tipo_doc: ['', [Validators.required],],
       nacionalidad: ['', [Validators.required],],
@@ -50,6 +51,7 @@ export class PersonaCreateComponent {
       idciudad: ['', [Validators.required]],
     });
   }
+  
 
   actualizarEstado(status: any) {
     //console.log(status)
@@ -61,24 +63,6 @@ export class PersonaCreateComponent {
     this.personaData = personaData;
     this.validateForm.patchValue(personaData);
   }
-
-  beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
-    new Observable((observer: Observer<boolean>) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-      if (!isJpgOrPng) {
-        this.msg.error('You can only upload JPG file!');
-        observer.complete();
-        return;
-      }
-      const isLt2M = file.size! / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        this.msg.error('Image must smaller than 2MB!');
-        observer.complete();
-        return;
-      }
-      observer.next(isJpgOrPng && isLt2M);
-      observer.complete();
-    });
 
   submitForm(): void {
     this.personaService.createPersona(this.personaData).subscribe((response) => {

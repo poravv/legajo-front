@@ -1,7 +1,8 @@
+version: '3'
 services:
   web:
     build: .
     image: legajo-front
     container_name: contenedor-legajo-front
     ports:
-      - "4004:4000"
+      - "4004:80"
