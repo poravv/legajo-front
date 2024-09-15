@@ -9,9 +9,6 @@ RUN ng build
 
 # Etapa 2: Servir la aplicación con Nginx
 FROM nginx:alpine
-WORKDIR /app
 COPY --from=build /app/dist/legajo-front /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 4004
-CMD ["nginx", "-g", "daemon off;"]
-
