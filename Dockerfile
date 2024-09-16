@@ -17,4 +17,6 @@ COPY --from=build /app/dist/legajo-front /usr/share/nginx/html
 # Copiar la configuración personalizada de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-EXPOSE 4000
+EXPOSE 4004
+
+CMD ["nginx", "-g", "daemon off;"]
