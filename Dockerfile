@@ -1,6 +1,5 @@
 # Etapa 1: Construcción de la aplicación Angular
 FROM node:20-alpine as build
-
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install -g @angular/cli  # Instalar Angular CLI globalmente
@@ -9,14 +8,10 @@ COPY . .
 RUN ng build
 
 # Etapa 2: Servir la aplicación con Nginx
-FROM nginx:alpine
-
-# Copiar los archivos construidos a la imagen de Nginx
+FROM node:14-alpine
+WORKDIR /app
 COPY --from=build /app/dist/legajo-front /usr/share/nginx/html
-
-# Copiar la configuración personalizada de Nginx
-COPY nginx.conf /etc/nginx/nginx.conf
-
+COPY --from=build /app/dist/legajo-front /app
+RUN npm install -g http-server
 EXPOSE 4004
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["http-server", "/app", "-p", "4000"]
