@@ -98,9 +98,9 @@
             <td>{{ legajo.fecha_upd }}</td>
             <td>{{ legajo.estado=="AC"?"Activo":"Inactivo" }}</td>
             <td>
-              <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">Edit</a>
+              <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">editar</a>
               <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
-                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">Delete</a>
+                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">borrar</a>
             </td>
           </ng-container>
         </ng-container>

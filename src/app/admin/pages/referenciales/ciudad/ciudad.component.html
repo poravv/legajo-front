@@ -36,9 +36,9 @@
           <td>{{ data.descripcion }}</td>
           <td>{{ data.estado=="AC"?"Activo":"Inactivo" }}</td>
           <td>
-            <a style="padding: 4px;" (click)="startEdit(data.idciudad)">Edit</a>
+            <a style="padding: 4px;" (click)="startEdit(data.idciudad)">editar</a>
             <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
-              (nzOnConfirm)="deleteRow(data.idciudad)">Delete</a>
+              (nzOnConfirm)="deleteRow(data.idciudad)">borrar</a>
           </td>
         </ng-container>
         <ng-template #editTemplate>
