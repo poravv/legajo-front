@@ -1,7 +1,8 @@
 <nz-layout>
   <nz-header>
-    <div [routerLink]="'home'" style="cursor: pointer;" class="logo"></div>
-
+    <div class="logo">
+      <img src="assets/logo.jpg" width="100" [routerLink]="'home'" style="cursor: pointer;">
+    </div>
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
       <nz-badge [nzCount]="personas.length" *ngIf="hasAnyRole(['admin'])">
         <i nz-icon class="icon" nzType="bell" nzTheme="outline" (click)="navigateToGestion()"></i>

@@ -31,3 +31,15 @@
     font-weight: bold;
   }
   
+  .container {
+    display: flex;
+    justify-items: center;
+    justify-content: center;
+    align-items: center;
+    --background-color: red;
+    height: 500px;
+  }
+
+  .img {
+    width: 50em;
+  }
