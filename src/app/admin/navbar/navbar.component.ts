@@ -27,10 +27,13 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.roles = this.authService.getUserRoles();
+    this.authService.getUserRolesAsync().then((role)=>{
+      
+    });
     
     if(this.hasRole('admin')){
-      this.pollingSubscription = interval(2000) // 30 segundos
+      console.log('Entra en admin if')
+      this.pollingSubscription = interval(10000) // 30 segundos
         .pipe(switchMap(() => this.personaService.getPersonaAgendamiento()))
         .subscribe(
           (data) => {

@@ -5,7 +5,6 @@ import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Observer, Subscription } from 'rxjs';
 import { CiudadService } from 'src/app/admin/services/ciudad/ciudad.service';
-import { NACIONALIDAD } from 'src/app/admin/utils/nacionalidades';
 import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { LegajoService } from 'src/app/admin/services/legajo/legajo.service';
 import { AsesorModel } from '../asesor/asesor.component';
@@ -233,8 +232,6 @@ export class PersonaComponent implements OnInit {
       if (legajoIndex !== -1) {
         const legajo = persona.legajos[legajoIndex];
         Object.assign(legajo, this.editCache[idlegajo].data);
-
-        console.log(legajo);
 
         if (this.image === '') {
           delete legajo.img; // Esto no causa un error de TypeScript

@@ -1,14 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormGroup,
   NonNullableFormBuilder,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { NzUploadFile } from 'ng-zorro-antd/upload';
-import { Observable, Observer } from 'rxjs';
-import { AuthService } from 'src/app/admin/services/auth/auth.service';
 import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { MessageService } from 'src/app/admin/utils/message.service';
 
@@ -47,6 +43,7 @@ export class PersonaCreateComponent{
       tipo_doc: ['', [Validators.required],],
       nacionalidad: ['', [Validators.required],],
       correo: [''],
+      fecha_agendamiento: [''],
       telefono: ['', [Validators.required]],
       idciudad: ['', [Validators.required]],
     });

@@ -203,11 +203,11 @@
                     <nz-input-group nzCompact>
                         <nz-date-picker name="fecha_agendamiento" [(ngModel)]="personaData.fecha_agendamiento"
                             (ngModelChange)="onInputChange()" style="width: 100%;"
+                            nzFormat="yyyy-MM-dd"
                             nzPlaceHolder="Fecha de agendamiento"></nz-date-picker>
                     </nz-input-group>
                 </nz-form-control>
             </nz-form-item>
-
         </form>
     </nz-tab>
 </nz-tabset>

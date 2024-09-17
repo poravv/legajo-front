@@ -10,6 +10,7 @@ import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { AsesorModel } from '../../asesor/asesor.component';
 import { AsesorService } from 'src/app/admin/services/asesor/asesor.service';
 import { AuthService } from 'src/app/admin/services/auth/auth.service';
+import { PersonaModel } from '../persona.component';
 
 @Component({
   selector: 'app-persona-create-template',
@@ -23,6 +24,7 @@ export class PersonaCreateTemplateComponent implements OnInit {
   @Output() ngModelChange = new EventEmitter<any>();
   @Output() ngModelChangeStatus = new EventEmitter<any>();
 
+  personaModel!: PersonaModel;
   selectedIndex = 0;
   loading = false;
   avatarUrl?: string;
@@ -69,7 +71,11 @@ export class PersonaCreateTemplateComponent implements OnInit {
     this.personaService.getPersonaByDoc(this.documento).subscribe(data => {
       //console.log(data.body);
       if (data.body) {
-        this.personaData = data.body;
+
+        console.log(data.body)
+
+        this.personaModel=data.body;
+        this.personaData = this.personaModel;
         this.documentStatus = true;
         this.changeTab(1);
         this.onInputChange();
