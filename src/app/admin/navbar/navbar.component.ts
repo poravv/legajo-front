@@ -32,7 +32,6 @@ export class NavbarComponent implements OnInit {
     });
     
     if(this.hasRole('admin')){
-      console.log('Entra en admin if')
       this.pollingSubscription = interval(10000) // 30 segundos
         .pipe(switchMap(() => this.personaService.getPersonaAgendamiento()))
         .subscribe(

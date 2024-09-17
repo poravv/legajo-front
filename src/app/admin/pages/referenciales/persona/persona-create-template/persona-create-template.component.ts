@@ -71,9 +71,6 @@ export class PersonaCreateTemplateComponent implements OnInit {
     this.personaService.getPersonaByDoc(this.documento).subscribe(data => {
       //console.log(data.body);
       if (data.body) {
-
-        console.log(data.body)
-
         this.personaModel=data.body;
         this.personaData = this.personaModel;
         this.documentStatus = true;

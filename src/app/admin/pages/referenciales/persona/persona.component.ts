@@ -235,10 +235,10 @@ export class PersonaComponent implements OnInit {
 
         if (this.image === '') {
           delete legajo.img; // Esto no causa un error de TypeScript
-          console.log('Legajo sin imagen', legajo);
+         //console.log('Legajo sin imagen', legajo);
         }else {
           legajo.img = this.image;
-          console.log('Legajo con imagen', legajo);
+          //console.log('Legajo con imagen', legajo);
         }
 
         // Actualizar el legajo
