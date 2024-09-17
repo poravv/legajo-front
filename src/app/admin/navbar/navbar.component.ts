@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
     this.roles = this.authService.getUserRoles();
     
     if(this.hasRole('admin')){
-      this.pollingSubscription = interval(30000) // 30 segundos
+      this.pollingSubscription = interval(2000) // 30 segundos
         .pipe(switchMap(() => this.personaService.getPersonaAgendamiento()))
         .subscribe(
           (data) => {
