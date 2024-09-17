@@ -8,7 +8,7 @@ import { UserService } from './admin/services/user/user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Mindtechpy';
+  title = 'Legajo';
 
   constructor(private oauthService: OAuthService,private userService: UserService) { }
 

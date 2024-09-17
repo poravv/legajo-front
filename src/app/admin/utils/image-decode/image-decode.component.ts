@@ -20,6 +20,9 @@ export class ImageDecodeComponent {
   isImage: boolean = false;
 
   ngOnInit(): void {
+    if(!this.image?.data){
+      return
+    }
     const base64String = Buffer.from(this.image!.data).toString('ascii');
     const divider =base64String.split(';');
     

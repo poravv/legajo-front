@@ -35,6 +35,7 @@ import { LegajoComponent } from './admin/pages/referenciales/legajo/legajo.compo
 import { LegajoCreateComponent } from './admin/pages/referenciales/legajo/legajo-create/legajo-create.component';
 import { AsesorComponent } from './admin/pages/referenciales/asesor/asesor.component';
 import { AsesorCreateComponent } from './admin/pages/referenciales/asesor/asesor-create/asesor-create.component';
+import { NotificationsComponent } from './admin/pages/notifications/notifications.component';
 
 
 registerLocaleData(es);
@@ -84,7 +85,8 @@ function initializeOAuth(oauthService: OAuthService): Promise<void> {
     LegajoComponent,
     LegajoCreateComponent,
     AsesorComponent,
-    AsesorCreateComponent
+    AsesorCreateComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,

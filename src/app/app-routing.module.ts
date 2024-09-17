@@ -14,6 +14,7 @@ import { LegajoComponent } from './admin/pages/referenciales/legajo/legajo.compo
 import { LegajoCreateComponent } from './admin/pages/referenciales/legajo/legajo-create/legajo-create.component';
 import { AsesorComponent } from './admin/pages/referenciales/asesor/asesor.component';
 import { AsesorCreateComponent } from './admin/pages/referenciales/asesor/asesor-create/asesor-create.component';
+import { NotificationsComponent } from './admin/pages/notifications/notifications.component';
 
 const routes: Routes = [
   { path: '', component: homeComponent },
@@ -49,6 +50,7 @@ const routes: Routes = [
       { path: 'edit/:idpersona', component: LegajoCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
     ]
   },
+  { path: 'notifications', component: NotificationsComponent },
   { path: '**', redirectTo: '' },
 ];
 

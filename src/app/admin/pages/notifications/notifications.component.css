@@ -1,0 +1,33 @@
+.nft {
+    border: 1px solid #ffffff44;
+    padding: 1rem;
+    margin: 1rem;
+    width: 200px;
+    box-shadow: 0 7px 50px 10px #00000022;
+    transition: .7s all;
+  }
+  
+  .tokenImage {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  .creator .wrapper img {
+    border-radius: 100%;
+    width: 2rem;
+    height: 2rem;
+    object-fit: cover;
+  }
+  
+  .tokenInfo {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+  }
+  
+  .price ins, .duration ins {
+    color: #a89ec9;
+    font-weight: bold;
+  }
+  

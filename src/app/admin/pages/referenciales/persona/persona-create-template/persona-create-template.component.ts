@@ -126,6 +126,9 @@ export class PersonaCreateTemplateComponent implements OnInit {
 
 
   decodeImage(imagen:any){
+    if(!imagen){
+      return
+    }
     const base64String = Buffer.from(imagen.data).toString('ascii');
     this.avatarUrl = base64String;
   }

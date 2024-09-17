@@ -27,6 +27,7 @@ import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
 
 @NgModule({
   declarations: [],
@@ -58,7 +59,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzCardModule,
     NzRadioModule,
     NzToolTipModule,
-    NzCheckboxModule
+    NzCheckboxModule,
+    NzBadgeModule
   ],
   exports:[
     CommonModule,
@@ -88,7 +90,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
     NzCardModule,
     NzRadioModule,
     NzToolTipModule,
-    NzCheckboxModule
+    NzCheckboxModule,
+    NzBadgeModule
   ]
 })
 export class SharedModule { }

@@ -1,8 +1,19 @@
 <nz-layout>
   <nz-header>
     <div [routerLink]="'home'" style="cursor: pointer;" class="logo"></div>
+
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
-      <li (click)="logout()" nz-menu-item>logout</li>
+      
+      
+
+      <nz-badge [nzCount]="personas.length" *ngIf="hasAnyRole(['admin'])">
+        <i nz-icon nzType="bell" nzTheme="outline" (click)="navigateToGestion()"></i>
+      </nz-badge>
+
+      <li style="margin-left: 50px;" (click)="logout()" nz-menu-item>logout</li>
+
+        
+      
     </ul>
   </nz-header>
   <nz-content class="outer-content">

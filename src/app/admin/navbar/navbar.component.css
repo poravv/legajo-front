@@ -39,3 +39,12 @@
     text-align: center;
     background-color: none;
   }
+
+  [nz-icon] {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+  }
