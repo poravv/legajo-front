@@ -275,7 +275,7 @@ export class PersonaComponent implements OnInit {
     this.listOfDisplayData = this.listOfData;
     const update = {
       idpersona: idpersona,
-      estado: 'IN'
+      estado: 'BO'
     }
     this.personaService.updatePersona(update).subscribe((response) => {
       if (response.mensaje == 'error') {
@@ -315,21 +315,23 @@ export class PersonaComponent implements OnInit {
     this.loading = true;
     //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
     this.personaService.getPersonaForAsesorCode().subscribe(response => {
+      
       if (response) {
-        response.body.forEach((data: PersonaModel) => {
-          if (data.estado !== 'IN') {
-            this.listOfData = [...this.listOfData, ...response.body];
-            this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-            this.pageIndex++;
-            // Si hay más registros, cargar la siguiente página
-            if (this.listOfData.length < this.totalItems) {
-              this.getPersonasAsesor(this.pageIndex);
-            } else {
-              this.loading = false;
-            }
-          }
-        })
-
+        const newData = response.body.filter((data: PersonaModel) => data.estado !== 'IN' && data.estado !== 'BO');
+  
+        // Añadir los nuevos datos a la lista sin duplicar
+        this.listOfData = [...this.listOfData, ...newData];
+  
+        this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
+        this.pageIndex++;
+  
+        // Si hay más registros, cargar la siguiente página
+        if (this.listOfData.length < this.totalItems) {
+          this.getPersonasAsesor(this.pageIndex);
+        } else {
+          this.loading = false;
+        }
+  
         this.listOfDisplayData = [...this.listOfData];
         this.updateEditCache();
       }
@@ -341,19 +343,24 @@ export class PersonaComponent implements OnInit {
 
   getAllpersona(page: number) {
     this.loading = true;
-    //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
+    
     this.personaService.getPersona().subscribe(response => {
-
       if (response) {
-        this.listOfData = [...this.listOfData, ...response.body];
+        const newData = response.body.filter((data: PersonaModel) => data.estado !== 'BO');
+  
+        // Añadir los nuevos datos a la lista sin duplicar
+        this.listOfData = [...this.listOfData, ...newData];
+  
         this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
         this.pageIndex++;
+  
         // Si hay más registros, cargar la siguiente página
         if (this.listOfData.length < this.totalItems) {
           this.getAllpersona(this.pageIndex);
         } else {
           this.loading = false;
         }
+  
         this.listOfDisplayData = [...this.listOfData];
         this.updateEditCache();
       }
@@ -362,6 +369,7 @@ export class PersonaComponent implements OnInit {
       console.error('Error al cargar los datos:', error);
     });
   }
+  
 
   _loadAllCiudad() {
     this.ciudadService.getCiudad().subscribe((data) => {
@@ -392,7 +400,7 @@ export class PersonaComponent implements OnInit {
     {
       title: 'Documento',
       compare: (a: PersonaModel, b: PersonaModel) => a.documento.localeCompare(b.documento),
-      priority:0
+      priority: 0
     }
   ];
 

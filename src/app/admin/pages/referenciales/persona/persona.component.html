@@ -10,7 +10,7 @@
     <i nz-icon nzType="search"></i>
   </ng-template>
   <nz-table #rowsPersona nzBordered [nzData]="listOfDisplayData" nzTableLayout="fixed" nzSize="middle"
-    [nzScroll]="{ x: '2200px', y: '400px' }">
+    [nzScroll]="{ x: '900px', y: '400px' }">
     <thead>
       <tr>
         <!--th nzWidth="30%">COLOR1</th-->
@@ -21,18 +21,18 @@
           {{ column.title }}
         </th>
         <th>Nacimiento</th>
-        <th>Sexo</th>
-        <th>Direccion</th>
-        <th>Perfil</th>
-        <th>Tipo doc.</th>
-        <th>Nacionalidad</th>
-        <th>Correo</th>
+        <!--th>Sexo</th-->
+        <!--th>Direccion</th-->
+        <!--th>Perfil</th-->
+        <!--th>Tipo doc.</th-->
+        <!--th>Nacionalidad</th-->
+        <!--th>Correo</th-->
         <th>Telefono</th>
-        <th>Ciudad</th>
+        <!--th>Ciudad</th-->
         <th>Asesor</th>
-        <th>Fecha Alta</th>
+        <!--th>Fecha Alta</th-->
         <!--th>Fecha Actualizacion</th-->
-        <th>Fecha Agendamiento</th>
+        <!--th>Fecha Agendamiento</th-->
         <th nzWidth="120px"></th>
       </tr>
     </thead>
@@ -58,18 +58,18 @@
           <td>{{ data.apellido }}</td>
           <td>{{ data.documento }}</td>
           <td>{{ data.nacimiento }}</td>
-          <td>{{ data.sexo=="MA"?"Masculino":"Femenino" }}</td>
-          <td>{{ data.direccion }}</td>
-          <td> <app-image-decode [image]="data.photo" /> </td>
-          <td>{{ data.tipo_doc }}</td>
-          <td>{{ data.nacionalidad }}</td>
-          <td>{{ data.correo }}</td>
+          <!--td>{{ data.sexo=="MA"?"Masculino":"Femenino" }}</td-->
+          <!--td>{{ data.direccion }}</td-->
+          <!--td> <app-image-decode [image]="data.photo" /> </td-->
+          <!--td>{{ data.tipo_doc }}</td-->
+          <!--td>{{ data.nacionalidad }}</td-->
+          <!--td>{{ data.correo }}</td-->
           <td>{{ data.telefono }}</td>
-          <td>{{ data.ciudad.descripcion }}</td>
+          <!--td>{{ data.ciudad.descripcion }}</td-->
           <td>{{ data.asesor? data.asesor.nombre+' '+data.asesor.apellido:'Sin asesor' }}</td>
-          <td>{{ data.fecha_insert }}</td>
+          <!--td>{{ data.fecha_insert }}</td-->
           <!--td>{{ data.fecha_upd }}</td-->
-          <td>{{ data.fecha_agendamiento }}</td>
+          <!--td>{{ data.fecha_agendamiento }}</td-->
           <td>
             <a style="padding: 4px;" [routerLink]="['/legajo/create', data.idpersona]" nzTooltipTitle="Legajo"
               nz-tooltip>Legajo</a>
