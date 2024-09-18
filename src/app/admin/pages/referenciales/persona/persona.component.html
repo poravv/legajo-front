@@ -54,7 +54,7 @@
           <td>{{ data.correo }}</td>
           <td>{{ data.telefono }}</td>
           <td>{{ data.ciudad.descripcion }}</td>
-          <td>{{ data.asesor.nombre+' '+data.asesor.apellido }}</td>
+          <td>{{ data.asesor? data.asesor.nombre+' '+data.asesor.apellido:'Sin asesor' }}</td>
           <td>{{ data.fecha_insert }}</td>
           <td>{{ data.fecha_upd }}</td>
           <td>{{ data.fecha_agendamiento }}</td>
@@ -100,7 +100,7 @@
             <td>
               <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">editar</a>
               <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
-                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">borrar</a>
+                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">Delete</a>
             </td>
           </ng-container>
         </ng-container>
