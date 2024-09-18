@@ -72,6 +72,28 @@ export class PersonaComponent implements OnInit {
 
   expandSet = new Set<number>();
 
+  //Modal
+  isVisible = false;
+  isOkLoading = false;
+  selectedPersona: PersonaModel | null = null;
+
+  showModal(persona: PersonaModel): void {
+    this.selectedPersona = persona;
+    this.isVisible = true;
+  }
+
+  handleOk(): void {
+    this.isOkLoading = true;
+    setTimeout(() => {
+      this.isVisible = false;
+      this.isOkLoading = false;
+    }, 3000);
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
   onExpandChange(id: number, checked: boolean): void {
     if (checked) {
       this.expandSet.add(id);

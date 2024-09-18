@@ -14,9 +14,9 @@
     <thead>
       <tr>
         <!--th nzWidth="30%">COLOR1</th-->
-        <th nzLeft nzWidth="50px"></th>
-        <th *ngFor="let column of listOfColumn;"
-          [nzSortFn]="column?.compare ? column.compare : null"
+        <th nzLeft nzWidth="60px"></th>
+        <th nzLeft nzWidth="60px"></th>
+        <th *ngFor="let column of listOfColumn;" [nzSortFn]="column?.compare ? column.compare : null"
           [nzSortPriority]="column.priority ? column.priority : 0">
           {{ column.title }}
         </th>
@@ -40,7 +40,14 @@
       <ng-container *ngFor="let data of rowsPersona.data">
         <tr>
           <td nzLeft [nzExpand]="expandSet.has(data.idpersona)"
-            (nzExpandChange)="onExpandChange(data.idpersona, $event)"></td>
+            (nzExpandChange)="onExpandChange(data.idpersona, $event)">
+          </td>
+          <td>
+            <button nz-button  nzType="link" (click)="showModal(data)">
+              <i nz-icon nzType="eye" nzTheme="outline"></i>
+            </button>
+          </td>
+          
           <td>
             <ng-container *ngIf="data.estado === 'AC'; else notActive">
               <nz-tag nzColor="success">Activo</nz-tag>
@@ -158,3 +165,35 @@
   </tbody>
   </nz-table>
 </div>
+
+
+<!--Modal-->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Detalles del Cliente" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading" nzWidth="600px">
+  <div *nzModalContent>
+    <div *ngIf="selectedPersona">
+      <p><strong>Nombre:</strong> {{ selectedPersona.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ selectedPersona.apellido }}</p>
+      <p><strong>Documento:</strong> {{ selectedPersona.documento }}</p>
+      <p><strong>Nacimiento:</strong> {{ selectedPersona.nacimiento }}</p>
+      <p><strong>Teléfono:</strong> {{ selectedPersona.telefono }}</p>
+      <p><strong>Asesor:</strong> {{ selectedPersona.asesor ? selectedPersona.asesor.nombre + ' ' + selectedPersona.asesor.apellido : 'Sin asesor' }}</p>
+      <p><strong>Estado:</strong>
+        <nz-tag [nzColor]="selectedPersona.estado === 'AC' ? 'success' : selectedPersona.estado === 'IN' ? 'error' : 'warning'">
+          {{ selectedPersona.estado === 'AC' ? 'Activo' : selectedPersona.estado === 'IN' ? 'Inactivo' : 'Agendamiento' }}
+        </nz-tag>
+      </p>
+      <p><strong>Sexo:</strong> {{ selectedPersona.sexo === 'MA' ? 'Masculino' : 'Femenino' }}</p>
+      <p><strong>Dirección:</strong> {{ selectedPersona.direccion }}</p>
+      <p><strong>Foto:</strong> <app-image-decode [image]="selectedPersona.photo"></app-image-decode></p>
+      <p><strong>Tipo de Documento:</strong> {{ selectedPersona.tipo_doc }}</p>
+      <p><strong>Nacionalidad:</strong> {{ selectedPersona.nacionalidad }}</p>
+      <p><strong>Correo:</strong> {{ selectedPersona.correo }}</p>
+      <p><strong>Ciudad:</strong> {{ selectedPersona.ciudad.descripcion }}</p>
+      <p><strong>Fecha de Alta:</strong> {{ selectedPersona.fecha_insert | date }}</p>
+      <p><strong>Fecha de Actualización:</strong> {{ selectedPersona.fecha_upd | date }}</p>
+      <p><strong>Fecha de Agendamiento:</strong> {{ selectedPersona.fecha_agendamiento | date }}</p>
+    </div>
+  </div>
+
+</nz-modal>
