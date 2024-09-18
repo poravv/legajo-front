@@ -267,9 +267,10 @@ export class PersonaComponent implements OnInit {
             this.messageService.createMessage('error', response.detmensaje);
           } else {
             this.messageService.createMessage('success', response.detmensaje);
+            this.refreshPage();
           }
         });
-        this.refreshPage();
+        
         this.editCache[idlegajo].edit = false;
         break; // Salir del bucle una vez encontrado y actualizado el legajo
       }
@@ -318,6 +319,7 @@ export class PersonaComponent implements OnInit {
         this.messageService.createMessage('error', response.detmensaje);
       } else {
         this.messageService.createMessage('success', response.detmensaje);
+        this.refreshPage();
       }
     });
 
