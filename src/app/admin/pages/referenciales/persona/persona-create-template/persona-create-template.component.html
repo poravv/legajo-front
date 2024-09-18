@@ -183,7 +183,7 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item nz-item>
+            <nz-form-item nz-item *ngIf="isAdmin()">
                 <nz-form-label nz-label nzRequired>Estado</nz-form-label>
                 <nz-form-control nzErrorTip="Inserte un valor correcto!">
                     <nz-input-group>

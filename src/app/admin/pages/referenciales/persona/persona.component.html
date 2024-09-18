@@ -15,12 +15,13 @@
       <tr>
         <!--th nzWidth="30%">COLOR1</th-->
         <th nzLeft nzWidth="50px"></th>
-        <th nzWidth="50px">Id</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
+        <th *ngFor="let column of listOfColumn;"
+          [nzSortFn]="column?.compare ? column.compare : null"
+          [nzSortPriority]="column.priority ? column.priority : 0">
+          {{ column.title }}
+        </th>
         <th>Nacimiento</th>
         <th>Sexo</th>
-        <th>Documento</th>
         <th>Direccion</th>
         <th>Perfil</th>
         <th>Tipo doc.</th>
@@ -30,23 +31,34 @@
         <th>Ciudad</th>
         <th>Asesor</th>
         <th>Fecha Alta</th>
-        <th>Fecha Actualizacion</th>
+        <!--th>Fecha Actualizacion</th-->
         <th>Fecha Agendamiento</th>
-        <th>Estado</th>
         <th nzWidth="120px"></th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let data of rowsPersona.data">
-        <tr *ngIf="data.estado != 'IN'">
+        <tr>
           <td nzLeft [nzExpand]="expandSet.has(data.idpersona)"
             (nzExpandChange)="onExpandChange(data.idpersona, $event)"></td>
-          <td>{{ data.idpersona }}</td>
+          <td>
+            <ng-container *ngIf="data.estado === 'AC'; else notActive">
+              <nz-tag nzColor="success">Activo</nz-tag>
+            </ng-container>
+            <ng-template #notActive>
+              <ng-container *ngIf="data.estado === 'IN'; else agendamiento">
+                <nz-tag nzColor="error">Inactivo</nz-tag>
+              </ng-container>
+              <ng-template #agendamiento>
+                <nz-tag nzColor="warning">Agendamiento</nz-tag>
+              </ng-template>
+            </ng-template>
+          </td>
           <td>{{ data.nombre }}</td>
           <td>{{ data.apellido }}</td>
+          <td>{{ data.documento }}</td>
           <td>{{ data.nacimiento }}</td>
           <td>{{ data.sexo=="MA"?"Masculino":"Femenino" }}</td>
-          <td>{{ data.documento }}</td>
           <td>{{ data.direccion }}</td>
           <td> <app-image-decode [image]="data.photo" /> </td>
           <td>{{ data.tipo_doc }}</td>
@@ -56,9 +68,8 @@
           <td>{{ data.ciudad.descripcion }}</td>
           <td>{{ data.asesor? data.asesor.nombre+' '+data.asesor.apellido:'Sin asesor' }}</td>
           <td>{{ data.fecha_insert }}</td>
-          <td>{{ data.fecha_upd }}</td>
+          <!--td>{{ data.fecha_upd }}</td-->
           <td>{{ data.fecha_agendamiento }}</td>
-          <td>{{ data.estado=="AC"?"Activo":data.estado=="AG"?"Agendamiento":"Inactivo"}}</td>
           <td>
             <a style="padding: 4px;" [routerLink]="['/legajo/create', data.idpersona]" nzTooltipTitle="Legajo"
               nz-tooltip>Legajo</a>
@@ -108,7 +119,7 @@
         <ng-template #editTemplate>
           <td><input type="text" nz-input disabled [(ngModel)]="editCache[legajo.idlegajo].data.idlegajo" /></td>
           <td><input type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.descripcion" /></td>
-          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>          
+          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>
           <td>
             <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" [nzBeforeUpload]="beforeUpload"
               [nzShowUploadList]="{ showDownloadIcon: false, showRemoveIcon: true }" [nzLimit]="1"
@@ -122,8 +133,10 @@
             <!--input type="text" nz-input [(ngModel)]="editCache[data.idpersona].data.photo" /-->
           </td>
           <!--td><input type="text" nz-input [(ngModel)]="editCache[data.idlegajo].data.estado" /></td-->
-          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" /></td>
-          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" /></td>
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" />
+          </td>
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" />
+          </td>
           <td>
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
               [(ngModel)]="editCache[legajo.idlegajo].data.estado">

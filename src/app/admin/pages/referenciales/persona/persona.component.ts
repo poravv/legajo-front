@@ -95,36 +95,34 @@ export class PersonaComponent implements OnInit {
     private router: Router
   ) {
 
-   }
+  }
 
   ngOnInit(): void {
     const roles = this.authService.getUserRoles();
-    if(roles.includes('admin')){
+    if (roles.includes('admin')) {
       this._loadAllPersonas();
-    }else{
+    } else {
       this._loadPersonasFromCodeAsesor();
     }
 
-
-    
     this._loadAllCiudad();
   }
 
   openWhatsApp(telefono: string): void {
     let numeroNormalizado = telefono;
-  
+
     // Si el número empieza con 0 (por ejemplo, 0981), lo reemplazamos con el prefijo internacional
     if (telefono.startsWith('0')) {
       numeroNormalizado = '595' + telefono.slice(1);
     }
-  
+
     // Generar el enlace para WhatsApp
     const link = `https://wa.me/${numeroNormalizado}`;
-  
+
     // Abrir en una nueva pestaña
     window.open(link, '_blank');
   }
-  
+
 
   beforeUpload = (file: NzUploadFile, _fileList: NzUploadFile[]): Observable<boolean> =>
     new Observable((observer: Observer<boolean>) => {
@@ -185,8 +183,8 @@ export class PersonaComponent implements OnInit {
     }
   }
 
-   // Manejar la eliminación del archivo
-   handleRemove = (): boolean => {
+  // Manejar la eliminación del archivo
+  handleRemove = (): boolean => {
     this.image = '--'; // Limpiar la lista de archivos al eliminar
     this.avatarUrl = '--';
     return true;
@@ -208,7 +206,7 @@ export class PersonaComponent implements OnInit {
       }
     }
   }
-  
+
 
   searchTotal(search: string) {
     const targetValue: any[] = [];
@@ -226,7 +224,7 @@ export class PersonaComponent implements OnInit {
 
   /*Ajustar para que el save viaje a la api de persistencia*/
   saveEdit(idlegajo: string): void {
- 
+
     for (const persona of this.listOfData) {
       const legajoIndex = persona.legajos.findIndex(legajo => legajo.idlegajo === idlegajo);
       if (legajoIndex !== -1) {
@@ -235,8 +233,8 @@ export class PersonaComponent implements OnInit {
 
         if (this.image === '') {
           delete legajo.img; // Esto no causa un error de TypeScript
-         //console.log('Legajo sin imagen', legajo);
-        }else {
+          //console.log('Legajo sin imagen', legajo);
+        } else {
           legajo.img = this.image;
           //console.log('Legajo con imagen', legajo);
         }
@@ -270,14 +268,14 @@ export class PersonaComponent implements OnInit {
       });
     });
   }
-  
+
 
   deleteRow(idpersona: number): void {
     this.listOfData = this.listOfData.filter(d => d.idpersona !== idpersona);
     this.listOfDisplayData = this.listOfData;
     const update = {
-      idpersona:idpersona,
-      estado:'IN'
+      idpersona: idpersona,
+      estado: 'IN'
     }
     this.personaService.updatePersona(update).subscribe((response) => {
       if (response.mensaje == 'error') {
@@ -290,8 +288,8 @@ export class PersonaComponent implements OnInit {
 
   deleteRowLegajo(idlegajo: string): void {
     const update = {
-      idlegajo:idlegajo,
-      estado:'IN'
+      idlegajo: idlegajo,
+      estado: 'IN'
     }
     this.legajoService.updateLegajo(update).subscribe((response) => {
       if (response.mensaje == 'error') {
@@ -308,24 +306,34 @@ export class PersonaComponent implements OnInit {
     this.getAllpersona(this.pageIndex);
   }
 
-  _loadPersonasFromCodeAsesor() {
+  _loadPersonasFromCodeAsesor(): void {
+    this.loading = true;
+    this.getPersonasAsesor(this.pageIndex);
+  }
+
+  getPersonasAsesor(page: number) {
     this.loading = true;
     //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
-      this.personaService.getPersonaForAsesorCode().subscribe(response =>{
-        if (response) {
-          this.listOfData = [...this.listOfData, ...response.body];
-          this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-          this.pageIndex++;
-          // Si hay más registros, cargar la siguiente página
-          if (this.listOfData.length < this.totalItems) {
-            this.getAllpersona(this.pageIndex);
-          } else {
-            this.loading = false;
+    this.personaService.getPersonaForAsesorCode().subscribe(response => {
+      if (response) {
+        response.body.forEach((data: PersonaModel) => {
+          if (data.estado !== 'IN') {
+            this.listOfData = [...this.listOfData, ...response.body];
+            this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
+            this.pageIndex++;
+            // Si hay más registros, cargar la siguiente página
+            if (this.listOfData.length < this.totalItems) {
+              this.getPersonasAsesor(this.pageIndex);
+            } else {
+              this.loading = false;
+            }
           }
-          this.listOfDisplayData = [...this.listOfData];
-          this.updateEditCache();
-        }
-    },error => {
+        })
+
+        this.listOfDisplayData = [...this.listOfData];
+        this.updateEditCache();
+      }
+    }, error => {
       this.loading = false;
       console.error('Error al cargar los datos:', error);
     });
@@ -334,22 +342,22 @@ export class PersonaComponent implements OnInit {
   getAllpersona(page: number) {
     this.loading = true;
     //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
-      this.personaService.getPersona().subscribe(response =>{
+    this.personaService.getPersona().subscribe(response => {
 
-        if (response) {
-          this.listOfData = [...this.listOfData, ...response.body];
-          this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-          this.pageIndex++;
-          // Si hay más registros, cargar la siguiente página
-          if (this.listOfData.length < this.totalItems) {
-            this.getAllpersona(this.pageIndex);
-          } else {
-            this.loading = false;
-          }
-          this.listOfDisplayData = [...this.listOfData];
-          this.updateEditCache();
+      if (response) {
+        this.listOfData = [...this.listOfData, ...response.body];
+        this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
+        this.pageIndex++;
+        // Si hay más registros, cargar la siguiente página
+        if (this.listOfData.length < this.totalItems) {
+          this.getAllpersona(this.pageIndex);
+        } else {
+          this.loading = false;
         }
-    },error => {
+        this.listOfDisplayData = [...this.listOfData];
+        this.updateEditCache();
+      }
+    }, error => {
       this.loading = false;
       console.error('Error al cargar los datos:', error);
     });
@@ -364,5 +372,28 @@ export class PersonaComponent implements OnInit {
   ciudadComparator = (ciudad: CiudadModel, other: CiudadModel): boolean => {
     return ciudad && other ? ciudad.idciudad === other.idciudad : ciudad === other;
   }
+
+  listOfColumn = [
+    {
+      title: 'Estado',
+      compare: (a: PersonaModel, b: PersonaModel) => a.estado.localeCompare(b.estado),
+      priority: 0
+    },
+    {
+      title: 'Nombre',
+      compare: (a: PersonaModel, b: PersonaModel) => a.nombre.localeCompare(b.nombre),
+      priority: 3
+    },
+    {
+      title: 'Apellido',
+      compare: (a: PersonaModel, b: PersonaModel) => a.apellido.localeCompare(b.apellido),
+      priority: 2
+    },
+    {
+      title: 'Documento',
+      compare: (a: PersonaModel, b: PersonaModel) => a.documento.localeCompare(b.documento),
+      priority:0
+    }
+  ];
 
 }
