@@ -87,7 +87,7 @@ export class PersonaComponent implements OnInit {
     setTimeout(() => {
       this.isVisible = false;
       this.isOkLoading = false;
-    }, 3000);
+    }, 100);
   }
 
   handleCancel(): void {
@@ -103,7 +103,7 @@ export class PersonaComponent implements OnInit {
   }
 
   //Para paginacion
-  totalItems = 0;
+  totalItems = 1;
   pageSize = 100;
   pageIndex = 1;
 
@@ -338,7 +338,7 @@ export class PersonaComponent implements OnInit {
   getPersonasAsesor(page: number) {
     this.loading = true;
     //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
-    this.personaService.getPersonaForAsesorCode().subscribe(response => {
+    this.personaService.getPersonaForAsesorCode(page,this.pageSize).subscribe(response => {
       
       if (response) {
         const newData = response.body.filter((data: PersonaModel) => data.estado !== 'IN' && data.estado !== 'BO');
@@ -368,7 +368,7 @@ export class PersonaComponent implements OnInit {
   getAllpersona(page: number) {
     this.loading = true;
     
-    this.personaService.getPersona().subscribe(response => {
+    this.personaService.getPersonaPage(page, this.pageSize).subscribe(response => {
       if (response) {
         const newData = response.body.filter((data: PersonaModel) => data.estado !== 'BO');
   
@@ -376,10 +376,13 @@ export class PersonaComponent implements OnInit {
         this.listOfData = [...this.listOfData, ...newData];
   
         this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-        this.pageIndex++;
-  
-        // Si hay más registros, cargar la siguiente página
-        if (this.listOfData.length < this.totalItems) {
+        
+        console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
+        console.log(`Current List Length: ${this.listOfData.length}`);
+        
+        // Incrementar el índice de página solo si hay más datos por cargar
+        if (newData.length > 0 && this.listOfData.length < this.totalItems) {
+          this.pageIndex++;
           this.getAllpersona(this.pageIndex);
         } else {
           this.loading = false;
@@ -387,12 +390,18 @@ export class PersonaComponent implements OnInit {
   
         this.listOfDisplayData = [...this.listOfData];
         this.updateEditCache();
+      } else {
+        this.loading = false;
       }
     }, error => {
       this.loading = false;
       console.error('Error al cargar los datos:', error);
     });
-  }
+}
+
+
+
+  
   
 
   _loadAllCiudad() {

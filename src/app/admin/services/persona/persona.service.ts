@@ -32,9 +32,9 @@ export class PersonaService {
   }
   
 
-  getPersonaForAsesorCode():Observable<any> {
+  getPersonaForAsesorCode(page:number,pageSize:number):Observable<any> {
     //console.log(this.oauthService.getAccessToken());
-    return this.httpClient.get(`${baseURL}/getForAsesor/`, {
+    return this.httpClient.get(`${baseURL}/getForAsesor?page=${page}&limit=${pageSize}`, {
       headers: {
         'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
       }
