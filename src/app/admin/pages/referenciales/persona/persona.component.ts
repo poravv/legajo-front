@@ -337,9 +337,8 @@ export class PersonaComponent implements OnInit {
 
   getPersonasAsesor(page: number) {
     this.loading = true;
-    //this.personaService.getPersonaPage(page,this.pageSize).subscribe(response =>{
-    this.personaService.getPersonaForAsesorCode(page,this.pageSize).subscribe(response => {
-      
+    
+    this.personaService.getPersonaForAsesorCode(page, this.pageSize).subscribe(response => {
       if (response) {
         const newData = response.body.filter((data: PersonaModel) => data.estado !== 'IN' && data.estado !== 'BO');
   
@@ -347,10 +346,13 @@ export class PersonaComponent implements OnInit {
         this.listOfData = [...this.listOfData, ...newData];
   
         this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-        this.pageIndex++;
-  
-        // Si hay más registros, cargar la siguiente página
-        if (this.listOfData.length < this.totalItems) {
+        
+        //console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
+        //console.log(`Current List Length: ${this.listOfData.length}`);
+        
+        // Incrementar el índice de página solo si hay más datos por cargar
+        if (newData.length > 0 && this.listOfData.length < this.totalItems) {
+          this.pageIndex++;
           this.getPersonasAsesor(this.pageIndex);
         } else {
           this.loading = false;
@@ -358,12 +360,15 @@ export class PersonaComponent implements OnInit {
   
         this.listOfDisplayData = [...this.listOfData];
         this.updateEditCache();
+      } else {
+        this.loading = false;
       }
     }, error => {
       this.loading = false;
       console.error('Error al cargar los datos:', error);
     });
-  }
+}
+
 
   getAllpersona(page: number) {
     this.loading = true;
@@ -377,8 +382,8 @@ export class PersonaComponent implements OnInit {
   
         this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
         
-        console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
-        console.log(`Current List Length: ${this.listOfData.length}`);
+        //console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
+        //console.log(`Current List Length: ${this.listOfData.length}`);
         
         // Incrementar el índice de página solo si hay más datos por cargar
         if (newData.length > 0 && this.listOfData.length < this.totalItems) {
@@ -399,10 +404,6 @@ export class PersonaComponent implements OnInit {
     });
 }
 
-
-
-  
-  
 
   _loadAllCiudad() {
     this.ciudadService.getCiudad().subscribe((data) => {
