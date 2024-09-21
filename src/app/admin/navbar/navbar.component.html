@@ -4,7 +4,7 @@
       <img src="assets/logo.jpg" width="100" [routerLink]="'home'" style="cursor: pointer;">
     </div>
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
-      <nz-badge [nzCount]="personas.length" *ngIf="hasAnyRole(['admin'])">
+      <nz-badge [nzCount]="personasCount" *ngIf="hasAnyRole(['admin'])">
         <i nz-icon class="icon" nzType="bell" nzTheme="outline" (click)="navigateToGestion()"></i>
       </nz-badge>
       <li style="margin-left: 50px;" (click)="logout()" nz-menu-item>Cerrar sesion</li>

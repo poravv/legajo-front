@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { PersonaModel } from '../pages/referenciales/persona/persona.component';
 import { PersonaService } from '../services/persona/persona.service';
 import { Router } from '@angular/router';
-import { interval, Subscription, switchMap } from 'rxjs';
+import {  Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -13,13 +13,13 @@ import { interval, Subscription, switchMap } from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
   roles: string[] = [];
-  personas: PersonaModel[] = [];
+  personasCount: number = 0;
   pollingSubscription!: Subscription;
+  validAgendamiento: boolean= true;
 
   constructor(
     private oauthService: OAuthService, 
     private authService: AuthService, 
-    private personaService: PersonaService,
     private router: Router) { }
 
   logout() {
@@ -27,43 +27,15 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.getUserRolesAsync().then((role)=>{
-      
+    this.roles = this.authService.getUserRoles(); 
+    this.authService.personas$.subscribe(personas => {
+      this.personasCount = personas.length;
     });
-    
-    if(this.hasRole('admin')){
-      this.pollingSubscription = interval(10000) // 30 segundos
-        .pipe(switchMap(() => this.personaService.getPersonaAgendamiento()))
-        .subscribe(
-          (data) => {
-            this.personas = data.body;
-          },
-          (error) => {
-            console.error('Error al obtener personas', error);
-          }
-        );
-    }
-  }
-
-
-  hasRole(role: string): boolean {
-    return this.roles.includes(role);
   }
 
   hasAnyRole(roles: string[]): boolean {
     //this.loadPersonas();
     return this.authService.hasAnyRole(roles);
-  }
-
-  loadPersonas(): void {
-    this.personaService.getPersonaAgendamiento().subscribe(
-      (data) => {
-        this.personas = data.body;
-      },
-      (error) => {
-        console.error('Error al obtener personas', error);
-      }
-    );
   }
 
   navigateToGestion(): void {
