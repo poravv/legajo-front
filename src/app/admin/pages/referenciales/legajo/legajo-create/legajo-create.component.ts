@@ -28,7 +28,8 @@ export class LegajoCreateComponent {
   loading = false;
   avatarUrl?: string;
   file?: string;
-  image?: any;
+  image?: any='';
+  fileList: any[] = [];
 
   constructor(
     private fb: NonNullableFormBuilder,
@@ -52,8 +53,6 @@ export class LegajoCreateComponent {
 
   submitForm(): void {
     
-
-
     if(this.idpersona=='') {
       this.messageService.createMessage('error','No se ha cargado id de persona');
       return;
@@ -69,6 +68,7 @@ export class LegajoCreateComponent {
       if(response.mensaje=='error'){
         this.messageService.createMessage('error',response.detmensaje);
       }else{
+        this.handleRemove();
         this.messageService.createMessage('success',response.detmensaje);
         this.validateForm.reset();
       }
@@ -160,5 +160,16 @@ export class LegajoCreateComponent {
         break;
     }
   }
+
+  // Manejar la eliminación del archivo
+  handleRemove = (): boolean => {
+    this.image = ''; // Limpiar la lista de archivos al eliminar
+    this.avatarUrl = '';
+    this.validateForm.patchValue({
+      img:''
+    });
+    this.fileList = [];
+    return true;
+  };
 
 }

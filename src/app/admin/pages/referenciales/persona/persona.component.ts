@@ -104,7 +104,7 @@ export class PersonaComponent implements OnInit {
 
   //Para paginacion
   totalItems = 1;
-  pageSize = 100;
+  pageSize = 10;
   pageIndex = 1;
 
   constructor(
