@@ -1,7 +1,7 @@
 <div *ngIf="personas.length > 0; else noPersonas">
   <h2>Gestionar clientes</h2>
-  <div style="width: 100%; display: flex;">
-    <div *ngFor="let persona of personas" class="nft">
+  <div style="width: 100%; display: flex; flex-wrap: wrap;">
+    <div  *ngFor="let persona of personas" class="nft">
       <div class="main">
         <img class="tokenImage" src="assets/profile.png" alt="Imagen de perfil" />
         <h2>{{ persona.nombre }} {{ persona.apellido }}</h2>

@@ -104,7 +104,7 @@ export class PersonaComponent implements OnInit {
 
   //Para paginacion
   totalItems = 1;
-  pageSize = 10;
+  pageSize = 100;
   pageIndex = 1;
 
   constructor(
@@ -114,7 +114,7 @@ export class PersonaComponent implements OnInit {
     private msg: NzMessageService,
     private ciudadService: CiudadService,
     private authService: AuthService,
-    private router: Router
+    //private router: Router
   ) {
 
   }
