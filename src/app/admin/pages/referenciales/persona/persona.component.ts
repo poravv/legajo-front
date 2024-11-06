@@ -272,7 +272,7 @@ export class PersonaComponent implements OnInit {
             this.refreshPage();
           }
         });
-        
+
         this.editCache[idlegajo].edit = false;
         break; // Salir del bucle una vez encontrado y actualizado el legajo
       }
@@ -339,20 +339,20 @@ export class PersonaComponent implements OnInit {
     this.pageIndex = 1; // Reiniciar el índice de página
     this.getAllPersonasInParallel();  // Obtener el total de elementos primero
   }
-  
+
   getAllPersonasInParallel(): void {
     this.personaService.getPersonaPage(this.pageIndex, this.pageSize).subscribe({
       next: (response) => {
         if (response) {
           this.totalItems = response.pagination ? response.pagination.totalItems : 0;
           const totalPages = Math.ceil(this.totalItems / this.pageSize);
-  
+
           // Limitar el número de solicitudes paralelas a 10 (por ejemplo)
           const observables = [];
           for (let i = this.pageIndex; i <= totalPages; i++) {
             observables.push(this.personaService.getPersonaPage(i, this.pageSize));
           }
-  
+
           // Usamos mergeMap para procesar las solicitudes en paralelo pero limitadas
           from(observables).pipe(
             mergeMap(obs => obs) // mergeMap ejecuta las peticiones en paralelo
@@ -384,8 +384,8 @@ export class PersonaComponent implements OnInit {
       }
     });
   }
-  
-  
+
+
 
   _loadPersonasFromCodeAsesor(): void {
     this.loading = true;
@@ -394,54 +394,70 @@ export class PersonaComponent implements OnInit {
 
   getPersonasAsesor(page: number) {
     this.loading = true;
-    
-    this.personaService.getPersonaForAsesorCode(page, this.pageSize).subscribe(response => {
-      if (response) {
-        const newData = response.body.filter((data: PersonaModel) => data.estado !== 'IN' && data.estado !== 'BO');
-  
-        // Añadir los nuevos datos a la lista sin duplicar
-        this.listOfData = [...this.listOfData, ...newData];
-  
-        this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-        
-        //console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
-        //console.log(`Current List Length: ${this.listOfData.length}`);
-        
-        // Incrementar el índice de página solo si hay más datos por cargar
-        if (newData.length > 0 && this.listOfData.length < this.totalItems) {
-          this.pageIndex++;
-          this.getPersonasAsesor(this.pageIndex);
-        } else {
-          this.loading = false;
+
+    this.personaService.getPersonaForAsesorCode(page, this.pageSize).subscribe({
+      next: (response) => {
+        if (response) {
+          this.totalItems = response.pagination ? response.pagination.totalItems : 0;
+          const totalPages = Math.ceil(this.totalItems / this.pageSize);
+
+          // Limitar el número de solicitudes paralelas a 10 (por ejemplo)
+          const observables = [];
+          for (let i = this.pageIndex; i <= totalPages; i++) {
+            observables.push(this.personaService.getPersonaForAsesorCode(i, this.pageSize));
+          }
+
+          // Usamos from() y mergeMap para procesar las solicitudes en paralelo pero limitadas
+          from(observables).pipe(
+            mergeMap(obs => obs) // mergeMap ejecuta las peticiones en paralelo
+          ).subscribe({
+            next: (response) => {
+              let newData: PersonaModel[] = [];
+              // Filtramos los datos que no tengan estado 'IN' o 'BO'
+              response.body.forEach((data: PersonaModel) => {
+                if (data.estado !== 'IN' && data.estado !== 'BO') {
+                  newData.push(data);
+                }
+              });
+              // Añadir los nuevos datos a la lista sin duplicar
+              this.listOfData = [...this.listOfData, ...newData];
+              this.listOfDisplayData = [...this.listOfData];
+              this.updateEditCache();
+            },
+            complete: () => {
+              this.loading = false; // Finalizamos la carga
+            },
+            error: (error) => {
+              console.error('Error al cargar los datos:', error);
+              this.loading = false; // Finalizamos la carga en caso de error
+            }
+          });
         }
-  
-        this.listOfDisplayData = [...this.listOfData];
-        this.updateEditCache();
-      } else {
+      },
+      error: (error) => {
         this.loading = false;
+        console.error('Error al obtener el total de items:', error);
       }
-    }, error => {
-      this.loading = false;
-      console.error('Error al cargar los datos:', error);
     });
-}
+  }
+
 
 
   getAllpersona(page: number) {
     this.loading = true;
-    
+
     this.personaService.getPersonaPage(page, this.pageSize).subscribe(response => {
       if (response) {
         const newData = response.body.filter((data: PersonaModel) => data.estado !== 'BO');
-  
+
         // Añadir los nuevos datos a la lista sin duplicar
         this.listOfData = [...this.listOfData, ...newData];
-  
+
         this.totalItems = response.pagination ? response.pagination.totalItems : this.listOfData.length;
-        
+
         //console.log(`Page: ${page}, New Data Length: ${newData.length}, Total Items: ${this.totalItems}`);
         //console.log(`Current List Length: ${this.listOfData.length}`);
-        
+
         // Incrementar el índice de página solo si hay más datos por cargar
         if (newData.length > 0 && this.listOfData.length < this.totalItems) {
           this.pageIndex++;
@@ -449,7 +465,7 @@ export class PersonaComponent implements OnInit {
         } else {
           this.loading = false;
         }
-  
+
         this.listOfDisplayData = [...this.listOfData];
         this.updateEditCache();
       } else {
@@ -459,7 +475,7 @@ export class PersonaComponent implements OnInit {
       this.loading = false;
       console.error('Error al cargar los datos:', error);
     });
-}
+  }
 
 
   _loadAllCiudad() {
