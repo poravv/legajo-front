@@ -3,13 +3,15 @@ import { MessageService } from 'src/app/admin/utils/message.service';
 import { CiudadModel } from '../ciudad/ciudad.component';
 import { NzUploadFile, NzUploadXHRArgs } from 'ng-zorro-antd/upload';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Observable, Observer, Subscription } from 'rxjs';
+import { forkJoin, Observable, Observer, Subscription } from 'rxjs';
 import { CiudadService } from 'src/app/admin/services/ciudad/ciudad.service';
 import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { LegajoService } from 'src/app/admin/services/legajo/legajo.service';
 import { AsesorModel } from '../asesor/asesor.component';
 import { AuthService } from 'src/app/admin/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { of, from } from 'rxjs';
+import { mergeMap, concatMap } from 'rxjs/operators';
 
 export interface ImagenBuffer {
   type: string,
@@ -104,7 +106,7 @@ export class PersonaComponent implements OnInit {
 
   //Para paginacion
   totalItems = 1;
-  pageSize = 100;
+  pageSize = 10;
   pageIndex = 1;
 
   constructor(
@@ -325,10 +327,65 @@ export class PersonaComponent implements OnInit {
 
   }
 
+  /*
   _loadAllPersonas(): void {
     this.loading = true;
     this.getAllpersona(this.pageIndex);
   }
+  */
+
+  _loadAllPersonas(): void {
+    this.loading = true;
+    this.pageIndex = 1; // Reiniciar el índice de página
+    this.getAllPersonasInParallel();  // Obtener el total de elementos primero
+  }
+  
+  getAllPersonasInParallel(): void {
+    this.personaService.getPersonaPage(this.pageIndex, this.pageSize).subscribe({
+      next: (response) => {
+        if (response) {
+          this.totalItems = response.pagination ? response.pagination.totalItems : 0;
+          const totalPages = Math.ceil(this.totalItems / this.pageSize);
+  
+          // Limitar el número de solicitudes paralelas a 10 (por ejemplo)
+          const observables = [];
+          for (let i = this.pageIndex; i <= totalPages; i++) {
+            observables.push(this.personaService.getPersonaPage(i, this.pageSize));
+          }
+  
+          // Usamos mergeMap para procesar las solicitudes en paralelo pero limitadas
+          from(observables).pipe(
+            mergeMap(obs => obs) // mergeMap ejecuta las peticiones en paralelo
+          ).subscribe({
+            next: (response) => {
+              let newData: PersonaModel[] = [];
+              response.body.forEach((data: PersonaModel) => {
+                if (data.estado !== 'BO') {
+                  newData.push(data);
+                }
+              });
+              this.listOfData = [...this.listOfData, ...newData];
+              this.listOfDisplayData = [...this.listOfData];
+              this.updateEditCache();
+            },
+            complete: () => {
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error('Error al cargar los datos:', error);
+              this.loading = false;
+            }
+          });
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error('Error al obtener el total de items:', error);
+      }
+    });
+  }
+  
+  
 
   _loadPersonasFromCodeAsesor(): void {
     this.loading = true;

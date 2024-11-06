@@ -21,3 +21,22 @@
   }
 
   
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    z-index: 9999; /* Asegura que el overlay esté por encima de todo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Permite que no se bloquee la interacción con el overlay */
+  }
+  
+  .nz-spin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

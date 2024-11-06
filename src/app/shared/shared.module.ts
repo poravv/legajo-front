@@ -29,6 +29,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 @NgModule({
   declarations: [],
@@ -62,7 +63,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzToolTipModule,
     NzCheckboxModule,
     NzBadgeModule,
-    NzTagModule
+    NzTagModule,
+    NzSpinModule
   ],
   exports:[
     CommonModule,
@@ -94,7 +96,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzToolTipModule,
     NzCheckboxModule,
     NzBadgeModule,
-    NzTagModule
+    NzTagModule,
+    NzSpinModule
   ]
 })
 export class SharedModule { }
