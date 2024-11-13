@@ -9,9 +9,8 @@ import { PersonaService } from 'src/app/admin/services/persona/persona.service';
 import { LegajoService } from 'src/app/admin/services/legajo/legajo.service';
 import { AsesorModel } from '../asesor/asesor.component';
 import { AuthService } from 'src/app/admin/services/auth/auth.service';
-import { Router } from '@angular/router';
-import { of, from } from 'rxjs';
-import { mergeMap, concatMap } from 'rxjs/operators';
+import { from } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 export interface ImagenBuffer {
   type: string,
@@ -70,7 +69,6 @@ export class PersonaComponent implements OnInit {
   searchValue = '';
   visible = false;
   listOfDisplayData: PersonaModel[] = [];
-  allCiudad?: CiudadModel[];
 
   expandSet = new Set<number>();
 
@@ -129,7 +127,6 @@ export class PersonaComponent implements OnInit {
       this._loadPersonasFromCodeAsesor();
     }
 
-    this._loadAllCiudad();
   }
 
   openWhatsApp(telefono: string): void {
@@ -477,12 +474,6 @@ export class PersonaComponent implements OnInit {
     });
   }
 
-
-  _loadAllCiudad() {
-    this.ciudadService.getCiudad().subscribe((data) => {
-      this.allCiudad = data.body
-    });
-  }
 
   ciudadComparator = (ciudad: CiudadModel, other: CiudadModel): boolean => {
     return ciudad && other ? ciudad.idciudad === other.idciudad : ciudad === other;
