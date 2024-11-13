@@ -15,6 +15,7 @@ import { LegajoCreateComponent } from './admin/pages/referenciales/legajo/legajo
 import { AsesorComponent } from './admin/pages/referenciales/asesor/asesor.component';
 import { AsesorCreateComponent } from './admin/pages/referenciales/asesor/asesor-create/asesor-create.component';
 import { NotificationsComponent } from './admin/pages/notifications/notifications.component';
+import { PersonaGesDayComponent } from './admin/pages/referenciales/persona/gesday/personagesday.component';
 
 const routes: Routes = [
   { path: '', component: homeComponent },
@@ -38,6 +39,14 @@ const routes: Routes = [
     path: 'cliente',
     children: [
       { path: 'list', component: PersonaComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
+      { path: 'create', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
+      { path: 'edit/:idcliente', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
+    ]
+  }, 
+  {
+    path: 'gesday',
+    children: [
+      { path: 'list', component: PersonaGesDayComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
       { path: 'create', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
       { path: 'edit/:idcliente', component: PersonaCreateComponent, canActivate: [RoleGuard], data: { expectedRoles: ['admin','asesor'] } },
     ]

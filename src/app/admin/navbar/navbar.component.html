@@ -23,6 +23,7 @@
           <ul>
             <li nz-menu-item [routerLink]="'ciudad/list'" *ngIf="hasAnyRole(['admin'])">Ciudades</li>
             <li nz-menu-item [routerLink]="'cliente/list'">Clientes</li>
+            <li nz-menu-item [routerLink]="'gesday/list'">Gestion Diaria</li>
             <li nz-menu-item [routerLink]="'asesor/list'" *ngIf="hasAnyRole(['admin'])">Asesores</li>
           </ul>
         </li>

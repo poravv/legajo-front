@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
-import { environment } from 'src/app/environment/environments'; 
+import { environment } from 'src/app/environment/environments';
 
-const baseURL = environment.serverUrl+'/persona';
+const baseURL = environment.serverUrl + '/persona';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ const baseURL = environment.serverUrl+'/persona';
 export class PersonaService {
   constructor(private oauthService: OAuthService, private httpClient: HttpClient) { }
 
-  getPersona():Observable<any> {
+  getPersona(): Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/get`, {
       headers: {
@@ -22,7 +22,19 @@ export class PersonaService {
     });
   }
 
-  getPersonaAgendamiento():Observable<any> {
+  getGesDayPersona(page: number, pageSize: number, fechaInsert?: string): Observable<any> {
+    // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
+    const url = `${baseURL}/gesDay?page=${page}&limit=${pageSize}${fechaInsert ? `&fecha_insert=${fechaInsert}` : ''}`;
+
+    return this.httpClient.get(url, {
+      headers: {
+        'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
+      }
+    });
+  }
+
+
+  getPersonaAgendamiento(): Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/getagendamiento`, {
       headers: {
@@ -30,9 +42,9 @@ export class PersonaService {
       }
     });
   }
-  
 
-  getPersonaForAsesorCode(page:number,pageSize:number):Observable<any> {
+
+  getPersonaForAsesorCode(page: number, pageSize: number): Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/getForAsesor?page=${page}&limit=${pageSize}`, {
       headers: {
@@ -41,8 +53,20 @@ export class PersonaService {
     });
   }
 
+  getPersonaGesDayForAsesorCode(page: number, pageSize: number, fechaInsert?: string): Observable<any> {
+    // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
+    const url = `${baseURL}/gesDayForAsesor?page=${page}&limit=${pageSize}${fechaInsert ? `&fecha_insert=${fechaInsert}` : ''}`;
 
-  getPersonaByDoc(documento:string):Observable<any> {
+    return this.httpClient.get(url, {
+      headers: {
+        'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
+      }
+    });
+  }
+
+
+
+  getPersonaByDoc(documento: string): Observable<any> {
     return this.httpClient.get(`${baseURL}/search_doc/${documento}`, {
       headers: {
         'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
@@ -50,7 +74,7 @@ export class PersonaService {
     });
   }
 
-  getPersonaPage(page:number,pageSize:number):Observable<any> {
+  getPersonaPage(page: number, pageSize: number): Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/get?page=${page}&limit=${pageSize}`, {
       headers: {
@@ -59,8 +83,8 @@ export class PersonaService {
     });
   }
 
-  createPersona(newData:[]):Observable<any> {
-    return this.httpClient.post(`${baseURL}/post`,newData, {
+  createPersona(newData: []): Observable<any> {
+    return this.httpClient.post(`${baseURL}/post`, newData, {
       headers: {
         'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
         //'Access-Control-Allow-Origin': '*',
@@ -68,9 +92,9 @@ export class PersonaService {
     });
   }
 
-  updatePersona(newData:any):Observable<any> {
+  updatePersona(newData: any): Observable<any> {
     //console.log(newData)
-    return this.httpClient.put(`${baseURL}/put/${newData.idpersona}`,newData, {
+    return this.httpClient.put(`${baseURL}/put/${newData.idpersona}`, newData, {
       headers: {
         'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
         //'Access-Control-Allow-Origin': '*',
@@ -78,7 +102,7 @@ export class PersonaService {
     });
   }
 
-  deletePersona(idpersona:number):Observable<any> {
+  deletePersona(idpersona: number): Observable<any> {
     //console.log(newData)
     return this.httpClient.delete(`${baseURL}/del/${idpersona}`, {
       headers: {

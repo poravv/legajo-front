@@ -1,0 +1,250 @@
+<app-content-header [title]="'Gestion Diaria'" [route]="'/cliente/create'" [buttonTitle]="'Gestion'" [exportExcel]="true"
+  [dataExport]="listOfDisplayData" [dataExportTitle]="'persona'" [masivo]="true" [type]="'persona'">
+</app-content-header>
+
+<!-- Overlay que muestra el spinner mientras se está cargando -->
+<div *ngIf="loading" class="loading-overlay">
+  <nz-spin [nzSpinning]="loading" [nzSize]="'large'"></nz-spin>
+</div>
+
+<!-- Tu contenido normal -->
+<div *ngIf="!loading">
+  <!-- Aquí va el contenido de la página -->
+</div>
+
+<nz-layout>
+  <nz-content>
+    <nz-card>
+      <form (ngSubmit)="onSubmit()">
+        <nz-row [nzGutter]="16" nzJustify="start" nzAlign="middle">
+          <!-- Campo para seleccionar la fecha -->
+          <nz-col [nzSpan]="18">
+            <nz-form-item>
+              <nz-form-label [nzFor]="'fecha_insert'">Fecha de Inserción:</nz-form-label>
+              <nz-form-control>
+                <nz-date-picker
+                  id="fecha_insert"
+                  [(ngModel)]="date"
+                  [ngModelOptions]="{ standalone: true }"
+                  nzFormat="yyyy-MM-dd"
+                  nzAllowClear
+                  (ngModelChange)="onFechaChange($event)"
+                ></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+          <!-- Botón de envío -->
+          <nz-col [nzSpan]="6">
+            <nz-form-item>
+              <nz-form-control>
+                <button nz-button nzType="primary" [disabled]="!fechaInsert" type="submit">
+                  Aplicar Filtro
+                </button>
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
+        </nz-row>
+      </form>
+    </nz-card>
+  </nz-content>
+</nz-layout>
+
+
+<div style="padding: 10px;">
+  <nz-input-group [nzSuffix]="suffixIconSearch">
+    <input type="text" #searchText nz-input placeholder="Buscador" Green (keyup)="searchTotal(searchText.value)" />
+  </nz-input-group>
+  <ng-template #suffixIconSearch>
+    <i nz-icon nzType="search"></i>
+  </ng-template>
+  <nz-table #rowspersonagesday nzBordered [nzData]="listOfDisplayData" nzTableLayout="fixed" nzSize="middle"
+    nzShowSizeChanger [nzScroll]="{ x: '900px', y: '400px' }">
+    <thead>
+      <tr>
+        <!--th nzWidth="30%">COLOR1</th-->
+        <th nzLeft nzWidth="60px"></th>
+        <th nzLeft nzWidth="60px"></th>
+        <th *ngFor="let column of listOfColumn;" [nzSortFn]="column?.compare ? column.compare : null"
+          [nzSortPriority]="column.priority ? column.priority : 0">
+          {{ column.title }}
+        </th>
+        <th>Nacimiento</th>
+        <!--th>Sexo</th-->
+        <!--th>Direccion</th-->
+        <!--th>Perfil</th-->
+        <!--th>Tipo doc.</th-->
+        <!--th>Nacionalidad</th-->
+        <!--th>Correo</th-->
+        <th>Telefono</th>
+        <!--th>Ciudad</th-->
+        <th>Asesor</th>
+        <!--th>Fecha Alta</th-->
+        <!--th>Fecha Actualizacion</th-->
+        <!--th>Fecha Agendamiento</th-->
+        <th nzWidth="120px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let data of rowspersonagesday.data">
+        <tr>
+          <td nzLeft [nzExpand]="expandSet.has(data.idpersona)"
+            (nzExpandChange)="onExpandChange(data.idpersona, $event)">
+          </td>
+          <td>
+            <button nz-button nzType="link" (click)="showModal(data)">
+              <i nz-icon nzType="eye" nzTheme="outline"></i>
+            </button>
+          </td>
+
+          <td>
+            <ng-container *ngIf="data.estado === 'AC'; else notActive">
+              <nz-tag nzColor="success">Activo</nz-tag>
+            </ng-container>
+            <ng-template #notActive>
+              <ng-container *ngIf="data.estado === 'IN'; else agendamiento">
+                <nz-tag nzColor="error">Inactivo</nz-tag>
+              </ng-container>
+              <ng-template #agendamiento>
+                <nz-tag nzColor="warning">Agendamiento</nz-tag>
+              </ng-template>
+            </ng-template>
+          </td>
+          <td>{{ data.nombre }}</td>
+          <td>{{ data.apellido }}</td>
+          <td>{{ data.documento }}</td>
+          <td>{{ data.nacimiento }}</td>
+          <!--td>{{ data.sexo=="MA"?"Masculino":"Femenino" }}</td-->
+          <!--td>{{ data.direccion }}</td-->
+          <!--td> <app-image-decode [image]="data.photo" /> </td-->
+          <!--td>{{ data.tipo_doc }}</td-->
+          <!--td>{{ data.nacionalidad }}</td-->
+          <!--td>{{ data.correo }}</td-->
+          <td>{{ data.telefono }}</td>
+          <!--td>{{ data.ciudad.descripcion }}</td-->
+          <td>{{ data.asesor? data.asesor.nombre+' '+data.asesor.apellido:'Sin asesor' }}</td>
+          <!--td>{{ data.fecha_insert }}</td-->
+          <!--td>{{ data.fecha_upd }}</td-->
+          <!--td>{{ data.fecha_agendamiento }}</td-->
+          <td>
+            <a style="padding: 4px;" [routerLink]="['/legajo/create', data.idpersona]" nzTooltipTitle="Legajo"
+              nz-tooltip>Legajo</a>
+            <br />
+            <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
+              (nzOnConfirm)="deleteRow(data.idpersona)">Borrar</a>
+            <br />
+            <a style="padding: 4px;" (click)="openWhatsApp(data.telefono)" nz-tooltip>Whatsapp</a>
+          </td>
+        </tr>
+
+        <tr [nzExpand]="expandSet.has(data.idpersona)">
+          <nz-table #editRowTable nzBordered [nzData]="data.legajos" nzTableLayout="fixed" nzSize="middle"
+            [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <!--th nzWidth="30%">COLOR1</th-->
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th>Detalle</th>
+                <th>Documento</th>
+                <th>Fecha Alta</th>
+                <th>Fecha Actualizacion</th>
+                <th>Estado</th>
+                <th></th>
+              </tr>
+            </thead>
+    <tbody>
+      <tr *ngFor="let legajo of editRowTable.data">
+        <ng-container *ngIf="legajo.estado === 'AC'">
+          <ng-container *ngIf="!editCache[legajo.idlegajo].edit; else editTemplate">
+            <td>{{ legajo.idlegajo }}</td>
+            <td>{{ legajo.descripcion }}</td>
+            <td>{{ legajo.detalle }}</td>
+            <td> <app-image-decode [image]="legajo.img" /> </td>
+            <td>{{ legajo.fecha_insert }}</td>
+            <td>{{ legajo.fecha_upd }}</td>
+            <td>{{ legajo.estado=="AC"?"Activo":"Inactivo" }}</td>
+            <td>
+              <a style="padding: 4px;" (click)="startEdit(legajo.idlegajo)">editar</a>
+              <a style="padding: 4px;" nz-popconfirm nzPopconfirmTitle="Seguro que desea eliminar?"
+                (nzOnConfirm)="deleteRowLegajo(legajo.idlegajo)">borrar</a>
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <ng-template #editTemplate>
+          <td><input type="text" nz-input disabled [(ngModel)]="editCache[legajo.idlegajo].data.idlegajo" /></td>
+          <td><input type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.descripcion" /></td>
+          <td><textarea type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.detalle"></textarea></td>
+          <td>
+            <nz-upload nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76" [nzBeforeUpload]="beforeUpload"
+              [nzShowUploadList]="{ showDownloadIcon: false, showRemoveIcon: true }" [nzLimit]="1"
+              [nzCustomRequest]="customUploadReq" [nzAccept]="'.png,.jpg,.jpeg,.pdf'" [nzMultiple]="false"
+              [nzRemove]="handleRemove" (nzChange)="handleChange($event)">
+              <button nz-button [disabled]="image!==''">
+                <span nz-icon nzType="upload"></span>
+                Upload
+              </button>
+            </nz-upload>
+            <!--input type="text" nz-input [(ngModel)]="editCache[data.idpersona].data.photo" /-->
+          </td>
+          <!--td><input type="text" nz-input [(ngModel)]="editCache[data.idlegajo].data.estado" /></td-->
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" />
+          </td>
+          <td><input disabled="true" type="text" nz-input [(ngModel)]="editCache[legajo.idlegajo].data.fecha_insert" />
+          </td>
+          <td>
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select estado"
+              [(ngModel)]="editCache[legajo.idlegajo].data.estado">
+              <nz-option nzLabel="Activo" nzValue="AC"></nz-option>
+              <nz-option nzLabel="Inactivo" nzValue="IN"></nz-option>
+            </nz-select>
+          </td>
+
+          <td>
+            <a (click)="saveEdit(legajo.idlegajo)" class="save">Save</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(legajo.idlegajo)">Cancel</a>
+          </td>
+        </ng-template>
+      </tr>
+    </tbody>
+  </nz-table>
+  </tr>
+  </ng-container>
+  </tbody>
+  </nz-table>
+</div>
+
+<!--Modal-->
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Detalles del Cliente" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+  [nzOkLoading]="isOkLoading" nzWidth="600px">
+  <div *nzModalContent>
+    <div *ngIf="selectedpersonagesday">
+      <p><strong>Nombre:</strong> {{ selectedpersonagesday.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ selectedpersonagesday.apellido }}</p>
+      <p><strong>Documento:</strong> {{ selectedpersonagesday.documento }}</p>
+      <p><strong>Nacimiento:</strong> {{ selectedpersonagesday.nacimiento }}</p>
+      <p><strong>Teléfono:</strong> {{ selectedpersonagesday.telefono }}</p>
+      <p><strong>Asesor:</strong> {{ selectedpersonagesday.asesor ? selectedpersonagesday.asesor.nombre + ' ' +
+        selectedpersonagesday.asesor.apellido : 'Sin asesor' }}</p>
+      <p><strong>Estado:</strong>
+        <nz-tag
+          [nzColor]="selectedpersonagesday.estado === 'AC' ? 'success' : selectedpersonagesday.estado === 'IN' ? 'error' : 'warning'">
+          {{ selectedpersonagesday.estado === 'AC' ? 'Activo' : selectedpersonagesday.estado === 'IN' ? 'Inactivo' :
+          'Agendamiento'
+          }}
+        </nz-tag>
+      </p>
+      <p><strong>Sexo:</strong> {{ selectedpersonagesday.sexo === 'MA' ? 'Masculino' : 'Femenino' }}</p>
+      <p><strong>Dirección:</strong> {{ selectedpersonagesday.direccion }}</p>
+      <p><strong>Foto:</strong> <app-image-decode [image]="selectedpersonagesday.photo"></app-image-decode></p>
+      <p><strong>Tipo de Documento:</strong> {{ selectedpersonagesday.tipo_doc }}</p>
+      <p><strong>Nacionalidad:</strong> {{ selectedpersonagesday.nacionalidad }}</p>
+      <p><strong>Correo:</strong> {{ selectedpersonagesday.correo }}</p>
+      <p><strong>Ciudad:</strong> {{ selectedpersonagesday.ciudad.descripcion }}</p>
+      <p><strong>Fecha de Alta:</strong> {{ selectedpersonagesday.fecha_insert | date }}</p>
+      <p><strong>Fecha de Actualización:</strong> {{ selectedpersonagesday.fecha_upd | date }}</p>
+      <p><strong>Fecha de Agendamiento:</strong> {{ selectedpersonagesday.fecha_agendamiento | date }}</p>
+    </div>
+  </div>
+
+</nz-modal>
