@@ -33,7 +33,6 @@ export class PersonaService {
 
   // Usar la fecha actual si `fechaInsert` es nulo
   const fecha = fechaInsert || formattedDate;
-  console.log(":::::::::::"+fecha)
     // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
     const url = `${baseURL}/gesDay?page=${page}&limit=${pageSize}${`&fecha_insert=${fecha}`}`;
 
@@ -75,7 +74,7 @@ export class PersonaService {
 
   // Usar la fecha actual si `fechaInsert` es nulo
   const fecha = fechaInsert || formattedDate;
-  console.log(":::::::::::"+fecha)
+  
 
     // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
     const url = `${baseURL}/gesDayForAsesor?page=${page}&limit=${pageSize}${`&fecha_insert=${fecha}`}`;
@@ -122,7 +121,18 @@ export class PersonaService {
     });
   }
 
-  createPersona(newData: []): Observable<any> {
+  createPersona(newData: any): Observable<any> {
+    
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+    const day = currentDate.getDate().toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+  
+    const formattedDate = `${year}-${month}-${day}`;
+  
+    newData.fecha_insert = formattedDate;
+    newData.fecha_insert = formattedDate;
+
     return this.httpClient.post(`${baseURL}/post`, newData, {
       headers: {
         'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
@@ -132,6 +142,16 @@ export class PersonaService {
   }
 
   updatePersona(newData: any): Observable<any> {
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+    const day = currentDate.getDate().toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+  
+    const formattedDate = `${year}-${month}-${day}`;
+  
+    newData.fecha_insert = formattedDate;
+
     //console.log(newData)
     return this.httpClient.put(`${baseURL}/put/${newData.idpersona}`, newData, {
       headers: {
