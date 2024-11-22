@@ -18,9 +18,9 @@
       <form (ngSubmit)="onSubmit()">
         <nz-row [nzGutter]="16" nzJustify="start" nzAlign="middle">
           <!-- Campo para seleccionar la fecha -->
-          <nz-col [nzSpan]="18">
+          <nz-col [nzSpan]="8">
             <nz-form-item>
-              <nz-form-label [nzFor]="'fecha_insert'">Fecha de Inserción:</nz-form-label>
+              <nz-form-label [nzFor]="'fecha_insert'">Fecha de Inserción</nz-form-label>
               <nz-form-control>
                 <nz-date-picker
                   id="fecha_insert"
@@ -33,12 +33,25 @@
               </nz-form-control>
             </nz-form-item>
           </nz-col>
+          <!-- Campo para filtrar por documento -->
+          <nz-col [nzSpan]="8">
+            <nz-form-item>
+              <nz-form-label [nzFor]="'documento'" >Documento</nz-form-label>
+              <nz-form-control>
+                <input nz-input id="documento" style="width: 50%;" [(ngModel)]="documento" name="documento" />
+              </nz-form-control>
+            </nz-form-item>
+          </nz-col>
           <!-- Botón de envío -->
           <nz-col [nzSpan]="6">
             <nz-form-item>
               <nz-form-control>
-                <button nz-button nzType="primary" [disabled]="!fechaInsert" type="submit">
+                <button nz-button nzType="primary" [disabled]="!fechaInsert && !documento" type="submit">
                   Aplicar Filtro
+                </button>
+
+                <button style="margin-left: 10px;" nz-button nzType="default" nzDanger (click)="cargaInicial()">
+                  Limpiar
                 </button>
               </nz-form-control>
             </nz-form-item>

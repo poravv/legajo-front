@@ -74,6 +74,22 @@ export class PersonaService {
     });
   }
 
+  getPersonaLegajoByDoc(page: number, pageSize: number,documento: string): Observable<any> {
+    return this.httpClient.get(`${baseURL}/likePersona?documento=${documento}&page=${page}&limit=${pageSize}`, {
+      headers: {
+        'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
+      }
+    });
+  }
+
+  getPersonaLegajoAsesorByDoc(page: number, pageSize: number,documento: string): Observable<any> {
+    return this.httpClient.get(`${baseURL}/likePersonaAsesor?documento=${documento}&page=${page}&limit=${pageSize}`, {
+      headers: {
+        'Authorization': `Bearer ${this.oauthService.getAccessToken()}`,
+      }
+    });
+  }
+
   getPersonaPage(page: number, pageSize: number): Observable<any> {
     //console.log(this.oauthService.getAccessToken());
     return this.httpClient.get(`${baseURL}/get?page=${page}&limit=${pageSize}`, {

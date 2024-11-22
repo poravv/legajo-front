@@ -71,9 +71,8 @@ export class PersonaGesDayComponent implements OnInit {
   visible = false;
   date = null;
   expandSet = new Set<number>();
-
-  // Variables de fechas
-  fechaInsert: string = ''; // Fecha como string
+  fechaInsert: string = ''; 
+  documento: string = '';
 
   //Modal
   isVisible = false;
@@ -123,13 +122,18 @@ export class PersonaGesDayComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cargaInicial();
+  }
+
+  cargaInicial(): void {
+    this.fechaInsert=''; 
+    this.documento= '';
     const roles = this.authService.getUserRoles();
     if (roles.includes('admin')) {
       this._loadAllpersonagesdays();
     } else {
       this._loadpersonagesdaysFromCodeAsesor();
     }
-
   }
 
   openWhatsApp(telefono: string): void {
@@ -336,6 +340,7 @@ export class PersonaGesDayComponent implements OnInit {
   getAllpersonagesdaysInParallel(): void {
     this.personaService.getGesDayPersona(this.pageIndex, this.pageSize, this.fechaInsert).subscribe({
       next: (response) => {
+
         if (response) {
           this.totalItems = response.pagination ? response.pagination.totalItems : 0;
           const totalPages = Math.ceil(this.totalItems / this.pageSize);
@@ -516,22 +521,146 @@ export class PersonaGesDayComponent implements OnInit {
 
 
   onSubmit(): void {
-    // Obtener los roles del usuario
-    const roles = this.authService.getUserRoles();
-    this.listOfData = [];
-    this.listOfDisplayData = [];
-    // Comprobar si tiene rol de 'admin' o no, y ejecutar la función de carga correspondiente
-    if (roles.includes('admin')) {
-      this._loadAllpersonagesdays();
-    } else {
-      this._loadpersonagesdaysFromCodeAsesor();
-    }
+    if (this.documento) {
+      // Obtener los roles del usuario
+      const roles = this.authService.getUserRoles();
+      this.listOfData = [];
+      this.listOfDisplayData = [];
 
-    // Si la fechaInsert tiene valor, se pasará como string (ya está en formato 'yyyy-MM-dd')
-    if (this.fechaInsert) {
-      console.log('Fecha seleccionada:', this.fechaInsert);
-      // Aquí llamas a la función que manda la fecha al backend, pasando `this.fechaInsert`
+      // Si el documento no está vacío, buscar principalmente por este parámetro
+      if (roles.includes('admin')) {
+        this._loadPersonaByDocAll();
+      } else {
+        this._loadPersonaAsesorByDocAll();
+      }
+    } else {
+      // Obtener los roles del usuario
+      const roles = this.authService.getUserRoles();
+      this.listOfData = [];
+      this.listOfDisplayData = [];
+      
+      // Comprobar si tiene rol de 'admin' o no, y ejecutar la función de carga correspondiente
+      if (roles.includes('admin')) {
+        this._loadAllpersonagesdays();
+      } else {
+        this._loadpersonagesdaysFromCodeAsesor();
+      }
+
+      // Si la fechaInsert tiene valor, se pasará como string (ya está en formato 'yyyy-MM-dd')
+      if (this.fechaInsert) {
+        console.log('Fecha seleccionada:', this.fechaInsert);
+        // Aquí llamas a la función que manda la fecha al backend, pasando `this.fechaInsert`
+      }
     }
+    
   }
+
+
+  _loadPersonaByDocAll(): void {
+    this.loading = true;
+    this.pageIndex = 1; // Reiniciar el índice de página
+    this.getPersonaByDocAll();  // Obtener el total de elementos primero
+  }
+
+  _loadPersonaAsesorByDocAll(): void {
+    this.loading = true;
+    this.pageIndex = 1; // Reiniciar el índice de página
+    this.getPersonaAsesorByDocAll();  // Obtener el total de elementos primero
+  }
+
+  getPersonaByDocAll(): void {
+    this.personaService.getPersonaLegajoByDoc(this.pageIndex, this.pageSize, this.documento).subscribe({
+      next: (response) => {
+        
+        console.log(response)
+
+        if (response) {
+          this.totalItems = response.pagination ? response.pagination.totalItems : 0;
+          const totalPages = Math.ceil(this.totalItems / this.pageSize);
+
+          // Limitar el número de solicitudes paralelas a 10 (por ejemplo)
+          const observables = [];
+          for (let i = this.pageIndex; i <= totalPages; i++) {
+            observables.push(this.personaService.getPersonaLegajoByDoc(i, this.pageSize, this.documento));
+          }
+
+          // Usamos mergeMap para procesar las solicitudes en paralelo pero limitadas
+          from(observables).pipe(
+            mergeMap(obs => obs) // mergeMap ejecuta las peticiones en paralelo
+          ).subscribe({
+            next: (response) => {
+              let newData: personagesdayModel[] = [];
+              response.body.forEach((data: personagesdayModel) => {
+                if (data.estado !== 'BO') {
+                  newData.push(data);
+                }
+              });
+              this.listOfData = [...this.listOfData, ...newData];
+              this.listOfDisplayData = [...this.listOfData];
+              this.updateEditCache();
+            },
+            complete: () => {
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error('Error al cargar los datos:', error);
+              this.loading = false;
+            }
+          });
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error('Error al obtener el total de items:', error);
+      }
+    });
+  }
+
+  getPersonaAsesorByDocAll(): void {
+    this.personaService.getPersonaLegajoAsesorByDoc(this.pageIndex, this.pageSize, this.documento).subscribe({
+      next: (response) => {
+        if (response) {
+          this.totalItems = response.pagination ? response.pagination.totalItems : 0;
+          const totalPages = Math.ceil(this.totalItems / this.pageSize);
+
+          // Limitar el número de solicitudes paralelas a 10 (por ejemplo)
+          const observables = [];
+          for (let i = this.pageIndex; i <= totalPages; i++) {
+            observables.push(this.personaService.getPersonaLegajoAsesorByDoc(i, this.pageSize, this.documento));
+          }
+
+          // Usamos mergeMap para procesar las solicitudes en paralelo pero limitadas
+          from(observables).pipe(
+            mergeMap(obs => obs) // mergeMap ejecuta las peticiones en paralelo
+          ).subscribe({
+            next: (response) => {
+              let newData: personagesdayModel[] = [];
+              response.body.forEach((data: personagesdayModel) => {
+                if (data.estado !== 'BO') {
+                  newData.push(data);
+                }
+              });
+              this.listOfData = [...this.listOfData, ...newData];
+              this.listOfDisplayData = [...this.listOfData];
+              this.updateEditCache();
+            },
+            complete: () => {
+              this.loading = false;
+            },
+            error: (error) => {
+              console.error('Error al cargar los datos:', error);
+              this.loading = false;
+            }
+          });
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error('Error al obtener el total de items:', error);
+      }
+    });
+  }
+
+  
 
 }
