@@ -23,8 +23,19 @@ export class PersonaService {
   }
 
   getGesDayPersona(page: number, pageSize: number, fechaInsert?: string): Observable<any> {
+    // Obtener la fecha actual
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+  const day = currentDate.getDate().toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  // Usar la fecha actual si `fechaInsert` es nulo
+  const fecha = fechaInsert || formattedDate;
+  console.log(":::::::::::"+fecha)
     // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
-    const url = `${baseURL}/gesDay?page=${page}&limit=${pageSize}${fechaInsert ? `&fecha_insert=${fechaInsert}` : ''}`;
+    const url = `${baseURL}/gesDay?page=${page}&limit=${pageSize}${`&fecha_insert=${fecha}`}`;
 
     return this.httpClient.get(url, {
       headers: {
@@ -54,8 +65,20 @@ export class PersonaService {
   }
 
   getPersonaGesDayForAsesorCode(page: number, pageSize: number, fechaInsert?: string): Observable<any> {
+    // Obtener la fecha actual
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+  const day = currentDate.getDate().toString().padStart(2, '0'); // Añadir un 0 inicial si es necesario
+
+  const formattedDate = `${year}-${month}-${day}`;
+
+  // Usar la fecha actual si `fechaInsert` es nulo
+  const fecha = fechaInsert || formattedDate;
+  console.log(":::::::::::"+fecha)
+
     // Si `fechaInsert` está definido, agrega el parámetro en la URL; de lo contrario, no lo incluyas
-    const url = `${baseURL}/gesDayForAsesor?page=${page}&limit=${pageSize}${fechaInsert ? `&fecha_insert=${fechaInsert}` : ''}`;
+    const url = `${baseURL}/gesDayForAsesor?page=${page}&limit=${pageSize}${`&fecha_insert=${fecha}`}`;
 
     return this.httpClient.get(url, {
       headers: {
