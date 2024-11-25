@@ -131,7 +131,7 @@ export class PersonaService {
     const formattedDate = `${year}-${month}-${day}`;
   
     newData.fecha_insert = formattedDate;
-    newData.fecha_insert = formattedDate;
+    newData.fecha_upd = formattedDate;
 
     return this.httpClient.post(`${baseURL}/post`, newData, {
       headers: {
@@ -150,7 +150,7 @@ export class PersonaService {
   
     const formattedDate = `${year}-${month}-${day}`;
   
-    newData.fecha_insert = formattedDate;
+    newData.fecha_upd = formattedDate;
 
     //console.log(newData)
     return this.httpClient.put(`${baseURL}/put/${newData.idpersona}`, newData, {
