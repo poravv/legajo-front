@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   FormGroup,
@@ -27,7 +28,8 @@ export class PersonaCreateComponent{
     private fb: NonNullableFormBuilder,
     private personaService: PersonaService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.validateForm = this.fb.group({
       nombre: ['', [Validators.required],],
@@ -81,7 +83,8 @@ export class PersonaCreateComponent{
 
   volver(e: MouseEvent): void {
     e.preventDefault();
-    this.router.navigateByUrl('/cliente/list');
+    //this.router.navigateByUrl('/cliente/list');
+    this.location.back();
   }
 
 }
