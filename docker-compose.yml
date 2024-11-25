@@ -5,3 +5,4 @@ services:
     container_name: contenedor-legajo-front
     ports:
       - "4004:4000"
+    restart: always
