@@ -17,15 +17,19 @@
       <ul nz-menu nzMode="inline" class="sider-menu">
         <li nz-menu-item [routerLink]="'home'">
           <span nz-icon nzType="home"></span>
-          <span>Home</span>
+          <span>Inicio</span>
         </li>
-        <li nz-submenu nzTitle="Sistema" nzIcon="setting" *ngIf="hasAnyRole(['admin','asesor'])">
+        <li nz-submenu nzTitle="Administración" nzIcon="setting" *ngIf="hasAnyRole(['admin','asesor'])">
           <ul>
             <li nz-menu-item [routerLink]="'ciudad/list'" *ngIf="hasAnyRole(['admin'])">Ciudades</li>
             <li nz-menu-item [routerLink]="'cliente/list'">Clientes</li>
-            <li nz-menu-item [routerLink]="'gesday/list'">Gestion diaria</li>
             <li nz-menu-item [routerLink]="'asesor/list'" *ngIf="hasAnyRole(['admin'])">Asesores</li>
           </ul>
+        </li>
+        <li nz-menu-item [routerLink]="'gesday/list'">
+          <span nz-icon nzType="calendar" nzTheme="outline" ></span>
+          <span>Gestion diaria</span>
+          
         </li>
       </ul>
     </nz-sider>

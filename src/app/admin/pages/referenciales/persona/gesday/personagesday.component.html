@@ -76,7 +76,7 @@
       <tr>
         <!--th nzWidth="30%">COLOR1</th-->
         <th nzLeft nzWidth="60px"></th>
-        <th nzLeft nzWidth="60px"></th>
+        <th nzWidth="60px"></th>
         <th *ngFor="let column of listOfColumn;" [nzSortFn]="column?.compare ? column.compare : null"
           [nzSortPriority]="column.priority ? column.priority : 0">
           {{ column.title }}
