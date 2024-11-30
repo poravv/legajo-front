@@ -1,4 +1,4 @@
-<app-content-header [title]="'Nuevo Cliente'"></app-content-header>
+<app-content-header [title]="'Formulario Cliente'"></app-content-header>
 
 <app-persona-create-template 
     [personaData]="personaData" 
@@ -18,7 +18,7 @@
             <button nz-button nzType="primary" [disabled]="!validateForm.valid">Crear</button>
         </nz-form-control>
         <nz-form-control>
-            <button nzType="primary" nzGhost nz-button (click)="resetForm()">Limpiar</button>
+            <button nzType="primary" nzGhost nz-button (click)="resetForm($event)">Limpiar</button>
         </nz-form-control>
     </nz-form-item>
 </form>

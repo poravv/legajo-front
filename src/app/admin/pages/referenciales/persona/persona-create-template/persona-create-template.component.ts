@@ -20,6 +20,7 @@ import { PersonaModel } from '../persona.component';
 export class PersonaCreateTemplateComponent implements OnInit {
   roles: string[] = [];
   @Input() personaData: any = {};
+  @Input() buscador: boolean = true;
   @Input() documentStatus: boolean = false;
   @Output() ngModelChange = new EventEmitter<any>();
   @Output() ngModelChangeStatus = new EventEmitter<any>();

@@ -112,7 +112,6 @@ export class PersonaComponent implements OnInit {
     private legajoService: LegajoService,
     private messageService: MessageService,
     private msg: NzMessageService,
-    private ciudadService: CiudadService,
     private authService: AuthService,
     //private router: Router
   ) {

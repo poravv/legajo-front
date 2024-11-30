@@ -75,7 +75,8 @@ export class PersonaCreateComponent{
     });
   }
 
-  resetForm(): void {
+  resetForm(e: MouseEvent): void {
+    e.preventDefault();
     this.validateForm.reset();
     this.documentStatus = false;
     this.personaData = {};

@@ -5,8 +5,6 @@ import { CiudadComponent } from './admin/pages/referenciales/ciudad/ciudad.compo
 import { CiudadCreateComponent } from './admin/pages/referenciales/ciudad/ciudad-create/ciudad-create.component';
 import { CreateMasivoComponent } from './admin/pages/create-masivo/create-masivo.component';
 import { DeleteMasivoComponent } from './admin/pages/delete-masivo/delete-masivo.component';
-import { ClienteComponent } from './admin/pages/referenciales/cliente/cliente.component';
-import { ClienteCreateComponent } from './admin/pages/referenciales/cliente/cliente-create/cliente-create.component';
 import { RoleGuard } from './admin/services/auth/role.guard';
 import { PersonaComponent } from './admin/pages/referenciales/persona/persona.component';
 import { PersonaCreateComponent } from './admin/pages/referenciales/persona/persona-create/persona-create.component';

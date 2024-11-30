@@ -1,5 +1,5 @@
-<nz-tabset nzType="card" [(nzSelectedIndex)]="selectedIndex">
-    <nz-tab nzTitle="Buscar">
+<nz-tabset [attr.nzType]="buscador ? 'card' : null" [(nzSelectedIndex)]="selectedIndex">
+    <nz-tab nzTitle="Buscar" *ngIf="buscador">
         <div style="display: flex; width: 80%;">
             <nz-form-item class="item" nz-item>
                 <nz-form-label class="label" nz-label>Documento</nz-form-label>
@@ -13,7 +13,7 @@
             </nz-form-item>
         </div>
     </nz-tab>
-    <nz-tab nzTitle="Formulario">
+    <nz-tab [nzTitle]="buscador ? 'Formulario' : ''" >
         <form nz-form [nzLayout]="'inline'">
             <nz-form-item nz-item>
                 <nz-form-label nz-label nzRequired>Documento</nz-form-label>
